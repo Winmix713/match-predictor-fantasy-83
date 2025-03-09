@@ -2,13 +2,13 @@
 import React from 'react';
 import MatchCard from './MatchCard';
 import { Calendar, TrendingUp } from 'lucide-react';
-import { teams } from './MatchCard';
-import { hungarianLeague } from '../data/teams';
+import { teams, hungarianLeague } from '../data/teams';
+import { generateHeadToHead } from '../data/teams';
+import { MatchProps } from '../types/match';
 
 // Generate mock matches
 const generateMockMatches = () => {
-  const mockMatches = [];
-  const times = ['14:00', '16:30', '19:00', '21:30'];
+  const mockMatches: MatchProps[] = [];
   
   // Generate matches with predetermined teams
   mockMatches.push({
@@ -17,7 +17,8 @@ const generateMockMatches = () => {
     homeTeam: teams[0], // Ferencváros
     awayTeam: teams[3], // Újpest
     isSelectable: true,
-    league: hungarianLeague
+    league: hungarianLeague,
+    headToHead: generateHeadToHead(teams[0].id, teams[3].id)
   });
   
   mockMatches.push({
@@ -26,7 +27,8 @@ const generateMockMatches = () => {
     homeTeam: teams[2], // Debrecen
     awayTeam: teams[1], // Puskás Akadémia
     isSelectable: true,
-    league: hungarianLeague
+    league: hungarianLeague,
+    headToHead: generateHeadToHead(teams[2].id, teams[1].id)
   });
   
   // Add a match with empty teams
@@ -71,12 +73,7 @@ const UpcomingMatches = () => {
           {matches.map(match => (
             <MatchCard 
               key={match.id}
-              id={match.id}
-              time={match.time}
-              homeTeam={match.homeTeam}
-              awayTeam={match.awayTeam}
-              isSelectable={match.isSelectable}
-              league={match.league}
+              {...match}
             />
           ))}
         </div>
