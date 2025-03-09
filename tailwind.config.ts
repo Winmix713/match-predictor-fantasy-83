@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -84,11 +85,45 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+        'pulse-subtle': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.85' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'fade-in-scale': {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        'glow': {
+          '0%, 100%': { opacity: '0.4' },
+          '50%': { opacity: '0.8' },
+        },
+        'shine': {
+          '100%': { transform: 'translateX(100%)' }
+        },
+        'slide-in': {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        'background-pan': {
+          '0%': { backgroundPosition: '0% center' },
+          '100%': { backgroundPosition: '200% center' },
+        },
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+        'pulse-subtle': 'pulse-subtle 3s ease-in-out infinite',
+        'fade-in': 'fade-in 0.5s ease-out forwards',
+        'fade-in-scale': 'fade-in-scale 0.5s ease-out forwards',
+        'glow': 'glow 2s ease-in-out infinite',
+        'shine': 'shine 2.5s ease-in-out infinite',
+        'slide-in': 'slide-in 0.5s ease-out forwards',
+        'background-pan': 'background-pan 3s ease infinite',
 			}
 		}
 	},
