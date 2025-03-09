@@ -1,34 +1,32 @@
 
 import React from 'react';
-import MatchCard, { Team, teams } from './MatchCard';
+import MatchCard from './MatchCard';
 import { Calendar, TrendingUp } from 'lucide-react';
+import { teams } from './MatchCard';
+import { hungarianLeague } from '../data/teams';
 
 // Generate mock matches
 const generateMockMatches = () => {
   const mockMatches = [];
   const times = ['14:00', '16:30', '19:00', '21:30'];
   
-  const getRandomTeams = (): [Team, Team] => {
-    const allTeams = [...teams];
-    const shuffledTeams = allTeams.sort(() => 0.5 - Math.random());
-    return [shuffledTeams[0], shuffledTeams[1]];
-  };
-  
   // Generate matches with predetermined teams
   mockMatches.push({
     id: 1,
     time: '19:00',
-    homeTeam: teams[0], // Arsenal
-    awayTeam: teams[3], // Chelsea
+    homeTeam: teams[0], // Ferencváros
+    awayTeam: teams[3], // Újpest
     isSelectable: true,
+    league: hungarianLeague
   });
   
   mockMatches.push({
     id: 2,
     time: '16:30',
-    homeTeam: teams[2], // Brighton
-    awayTeam: teams[1], // Aston Villa
+    homeTeam: teams[2], // Debrecen
+    awayTeam: teams[1], // Puskás Akadémia
     isSelectable: true,
+    league: hungarianLeague
   });
   
   // Add a match with empty teams
@@ -38,6 +36,7 @@ const generateMockMatches = () => {
     homeTeam: null,
     awayTeam: null,
     isSelectable: true,
+    league: hungarianLeague
   });
   
   return mockMatches;
@@ -54,16 +53,16 @@ const UpcomingMatches = () => {
             <div className="flex items-center gap-2 mb-2">
               <Calendar className="w-5 h-5 text-blue-400" />
               <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200">
-                Today's Featured Matches
+                Mai kiemelt mérkőzések
               </h2>
             </div>
-            <p className="text-gray-400">Select teams and make your predictions</p>
+            <p className="text-gray-400">Válassz csapatokat és küldd el tippjeidet</p>
           </div>
           
           <div className="mt-4 md:mt-0 flex items-center gap-3 bg-blue-500/10 rounded-lg px-4 py-2 border border-blue-500/20">
             <TrendingUp className="w-4 h-4 text-blue-400" />
             <span className="text-sm text-blue-300">
-              <strong className="text-blue-300">2,547</strong> predictions made today
+              <strong className="text-blue-300">2 547</strong> tipp ma
             </span>
           </div>
         </div>
@@ -77,6 +76,7 @@ const UpcomingMatches = () => {
               homeTeam={match.homeTeam}
               awayTeam={match.awayTeam}
               isSelectable={match.isSelectable}
+              league={match.league}
             />
           ))}
         </div>
