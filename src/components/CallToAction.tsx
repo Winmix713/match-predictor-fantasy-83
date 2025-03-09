@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle, Trophy as TrophyIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const CallToAction = () => {
@@ -73,7 +73,7 @@ const CallToAction = () => {
                   <div className="relative">
                     <div className="absolute -inset-4 bg-blue-500/20 rounded-full blur-xl animate-pulse-subtle"></div>
                     <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center relative">
-                      <Trophy className="text-white h-16 w-16" />
+                      <TrophyIcon className="text-white h-16 w-16" />
                     </div>
                   </div>
                 </div>
