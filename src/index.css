@@ -86,6 +86,58 @@
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r;
   }
+
+  /* Button interactions */
+  .btn-base {
+    @apply relative overflow-hidden transition-all duration-300;
+  }
+
+  .btn-primary {
+    @apply btn-base bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md hover:shadow-lg hover:shadow-blue-500/25 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply btn-base bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white active:scale-95;
+  }
+
+  .btn-icon {
+    @apply btn-base p-2 rounded-full bg-white/5 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 active:scale-90;
+  }
+
+  /* Card interactions */
+  .card-hover {
+    @apply transition-all duration-300 hover:translate-y-[-4px] hover:shadow-lg hover:shadow-blue-500/10;
+  }
+  
+  .card-active {
+    @apply active:scale-[0.99] active:translate-y-[1px];
+  }
+
+  /* Animated elements */
+  .shine-effect {
+    @apply before:absolute before:inset-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:-translate-x-full before:animate-shine overflow-hidden;
+  }
+  
+  .staggered-animate > * {
+    @apply opacity-0;
+    animation: staggerFadeIn 0.5s ease-out forwards;
+  }
+  
+  .staggered-animate > *:nth-child(1) { animation-delay: 0.1s; }
+  .staggered-animate > *:nth-child(2) { animation-delay: 0.2s; }
+  .staggered-animate > *:nth-child(3) { animation-delay: 0.3s; }
+  .staggered-animate > *:nth-child(4) { animation-delay: 0.4s; }
+  .staggered-animate > *:nth-child(5) { animation-delay: 0.5s; }
+  
+  @keyframes staggerFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Mobile optimizations */
+  .touch-feedback {
+    @apply active:bg-white/10 transition-colors duration-150;
+  }
 }
 
 .page-transition-enter {
@@ -108,4 +160,19 @@
   opacity: 0;
   transform: translateY(-20px);
   transition: opacity 300ms, transform 300ms;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 640px) {
+  .mobile-stack {
+    @apply flex flex-col;
+  }
+  
+  .mobile-center {
+    @apply flex justify-center items-center text-center;
+  }
+  
+  .mobile-full {
+    @apply w-full;
+  }
 }

@@ -114,6 +114,39 @@ export default {
           '0%': { backgroundPosition: '0% center' },
           '100%': { backgroundPosition: '200% center' },
         },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" }
+        },
+        "scale-up": {
+          "0%": { transform: "scale(0.97)", opacity: "0.7" },
+          "100%": { transform: "scale(1)", opacity: "1" }
+        },
+        "pop": {
+          "0%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.05)" },
+          "100%": { transform: "scale(1)" }
+        },
+        "glow-pulse": {
+          "0%, 100%": { boxShadow: "0 0 5px 2px rgba(59, 130, 246, 0)" },
+          "50%": { boxShadow: "0 0 8px 4px rgba(59, 130, 246, 0.3)" }
+        },
+        "slide-up": {
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" }
+        },
+        "slide-in-bottom": {
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" }
+        },
+        "slide-in-left": {
+          "0%": { transform: "translateX(-20px)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" }
+        },
+        "slide-in-right": {
+          "0%": { transform: "translateX(20px)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" }
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -125,6 +158,14 @@ export default {
         'shine': 'shine 2.5s ease-in-out infinite',
         'slide-in': 'slide-in 0.5s ease-out forwards',
         'background-pan': 'background-pan 3s ease infinite',
+        "float": "float 3s ease-in-out infinite",
+        "scale-up": "scale-up 0.3s ease-out",
+        "pop": "pop 0.3s ease-out",
+        "glow-pulse": "glow-pulse 2s ease-in-out infinite",
+        "slide-up": "slide-up 0.5s ease-out",
+        "slide-in-bottom": "slide-in-bottom 0.5s ease-out forwards",
+        "slide-in-left": "slide-in-left 0.5s ease-out forwards",
+        "slide-in-right": "slide-in-right 0.5s ease-out forwards"
       }
     }
   },
