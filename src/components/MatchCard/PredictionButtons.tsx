@@ -4,18 +4,40 @@ import { Check } from 'lucide-react';
 import { PredictionType, Team } from '../../types/match';
 
 interface PredictionButtonsProps {
-  homeTeam: Team | null;
-  awayTeam: Team | null;
   selectedPrediction: PredictionType;
   setSelectedPrediction: (type: PredictionType) => void;
+  homeTeam?: Team | null;
+  awayTeam?: Team | null;
+  minimal: boolean;
 }
 
 const PredictionButtons: React.FC<PredictionButtonsProps> = ({
   homeTeam,
   awayTeam,
   selectedPrediction,
-  setSelectedPrediction
+  setSelectedPrediction,
+  minimal
 }) => {
+  if (minimal) {
+    // Minimális nézet, kis jelzőkkel
+    return (
+      <div className="flex space-x-1 items-center justify-center mt-1">
+        <div 
+          className={`h-2 w-2 rounded-full ${selectedPrediction === 'home' ? 'bg-blue-400' : 'bg-gray-600'}`}
+          onClick={() => setSelectedPrediction('home')}
+        />
+        <div 
+          className={`h-2 w-2 rounded-full ${selectedPrediction === 'draw' ? 'bg-blue-400' : 'bg-gray-600'}`}
+          onClick={() => setSelectedPrediction('draw')}
+        />
+        <div 
+          className={`h-2 w-2 rounded-full ${selectedPrediction === 'away' ? 'bg-blue-400' : 'bg-gray-600'}`}
+          onClick={() => setSelectedPrediction('away')}
+        />
+      </div>
+    );
+  }
+
   if (!homeTeam || !awayTeam) return null;
 
   return (

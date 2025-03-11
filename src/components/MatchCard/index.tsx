@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import { Team, MatchProps, PredictionType } from '../../types/match';
 import MatchHeader from './MatchHeader';
@@ -27,15 +28,35 @@ const MatchCard: React.FC<MatchProps> = ({
   const [isStatsExpanded, setIsStatsExpanded] = useState(false);
   const [headToHead, setHeadToHead] = useState<ReturnType<typeof generateHeadToHead>>([]);
 
-  useEffect(() => {
+  // Headto-Head adatok optimalizált számítása useMemo segítségével
+  const calculatedHeadToHead = useMemo(() => {
     if (homeTeam && awayTeam) {
-      setHeadToHead(generateHeadToHead(homeTeam.id, awayTeam.id));
-    } else {
-      setHeadToHead([]);
+      return generateHeadToHead(homeTeam.id, awayTeam.id);
     }
+    return [];
   }, [homeTeam, awayTeam]);
 
-  const handlePredictMatch = async () => {
+  // Frissítjük a head-to-head adatokat, amikor változnak a csapatok
+  useEffect(() => {
+    setHeadToHead(calculatedHeadToHead);
+  }, [calculatedHeadToHead]);
+
+  // Optimalizált callback függvények
+  const toggleHomeDropdown = useCallback(() => {
+    setIsHomeDropdownOpen(prev => !prev);
+    setIsAwayDropdownOpen(false);
+  }, []);
+
+  const toggleAwayDropdown = useCallback(() => {
+    setIsAwayDropdownOpen(prev => !prev);
+    setIsHomeDropdownOpen(false);
+  }, []);
+
+  const toggleStatsExpanded = useCallback(() => {
+    setIsStatsExpanded(prev => !prev);
+  }, []);
+
+  const handlePredictMatch = useCallback(async () => {
     if (!homeTeam || !awayTeam || !selectedPrediction) return;
     
     setIsSubmitting(true);
@@ -69,20 +90,13 @@ const MatchCard: React.FC<MatchProps> = ({
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const toggleHomeDropdown = () => {
-    setIsHomeDropdownOpen(!isHomeDropdownOpen);
-    if (isAwayDropdownOpen) setIsAwayDropdownOpen(false);
-  };
-
-  const toggleAwayDropdown = () => {
-    setIsAwayDropdownOpen(!isAwayDropdownOpen);
-    if (isHomeDropdownOpen) setIsHomeDropdownOpen(false);
-  };
+  }, [homeTeam, awayTeam, selectedPrediction]);
 
   return (
-    <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-900/95 via-gray-900/98 to-black backdrop-blur-sm p-6 transition-all duration-500 hover:shadow-xl hover:shadow-blue-500/10 border border-white/5 hover:border-white/10 animate-fade-in card-hover card-active">
+    <div 
+      className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-900/95 via-gray-900/98 to-black backdrop-blur-sm p-6 transition-all duration-500 hover:shadow-xl hover:shadow-blue-500/10 border border-white/5 hover:border-white/10 animate-fade-in card-hover card-active"
+      aria-label="Match prediction card"
+    >
       {/* Ambient Glow Effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
       
@@ -176,7 +190,7 @@ const MatchCard: React.FC<MatchProps> = ({
             awayTeam={awayTeam}
             headToHead={headToHead}
             isExpanded={isStatsExpanded}
-            toggleExpanded={() => setIsStatsExpanded(!isStatsExpanded)}
+            toggleExpanded={toggleStatsExpanded}
           />
         )}
       </div>
