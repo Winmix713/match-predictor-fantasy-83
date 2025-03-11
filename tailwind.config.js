@@ -95,6 +95,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
         "pulse-subtle": "pulse-subtle 2s ease-in-out infinite",
+        "shine": "shine 2.5s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
         "scale-up": "scale-up 0.3s ease-out",
         "pop": "pop 0.3s ease-out",

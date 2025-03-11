@@ -104,6 +104,7 @@ export default {
           '50%': { opacity: '0.8' },
         },
         'shine': {
+          '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(100%)' }
         },
         'slide-in': {
