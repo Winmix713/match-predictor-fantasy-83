@@ -52,7 +52,7 @@ export default {
             opacity: "0.8"
           }
         },
-        shine: {
+        "shine": {
           '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(100%)' }
         },
