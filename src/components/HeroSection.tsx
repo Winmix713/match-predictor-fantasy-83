@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ChevronRight, Users, Award, TrendingUp, ExternalLink } from 'lucide-react';
+import { ChevronRight, Users, Award, TrendingUp, ExternalLink, Trophy } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
