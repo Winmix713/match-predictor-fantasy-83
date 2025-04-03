@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Trophy, Award } from 'lucide-react';
 
 const HeroCard = () => {
   return (
