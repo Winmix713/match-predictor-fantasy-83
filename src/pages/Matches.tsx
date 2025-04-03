@@ -49,7 +49,7 @@ const Matches = () => {
               ) : (
                 <div className="bg-card rounded-xl overflow-hidden border border-white/5 shadow-lg">
                   <Tabs defaultValue="matches" className="w-full" onValueChange={setActiveTab}>
-                    <div className="grid grid-cols-4 bg-muted/50">
+                    <TabsList className="grid grid-cols-4 bg-muted/50 w-full rounded-none">
                       <TabsTrigger 
                         value="matches" 
                         className="py-4 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:bg-black/20"
@@ -74,7 +74,7 @@ const Matches = () => {
                       >
                         Both Teams Scored
                       </TabsTrigger>
-                    </div>
+                    </TabsList>
                     
                     <TabsContent value="matches" className="p-0 mt-0">
                       <MatchSchedule />
