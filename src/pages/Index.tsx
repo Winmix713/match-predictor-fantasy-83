@@ -23,10 +23,18 @@ const Index = () => {
       
       <Header />
       <main>
-        <HeroSection />
-        <UpcomingMatches />
-        <ValueProposition />
-        <CallToAction />
+        <section id="hero">
+          <HeroSection />
+        </section>
+        <section id="upcoming-matches">
+          <UpcomingMatches />
+        </section>
+        <section id="value-proposition">
+          <ValueProposition />
+        </section>
+        <section id="call-to-action">
+          <CallToAction />
+        </section>
       </main>
       <Footer />
     </div>
