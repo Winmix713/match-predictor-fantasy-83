@@ -22,7 +22,7 @@ const Header = () => {
   }, []);
   
   const navLinks = [
-    { text: "Közelgő mérkőzések", href: "/", icon: <Calendar className="w-4 h-4" /> },
+    { text: "Mérkőzések", href: "/matches", icon: <Calendar className="w-4 h-4" /> },
     { text: "Ranglista", href: "/leaderboard", icon: <BarChart4 className="w-4 h-4" /> },
     { text: "Élő mérkőzések", href: "/live", icon: <Trophy className="w-4 h-4" /> },
   ];
