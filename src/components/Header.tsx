@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Trophy, BarChart4, Calendar, User, Menu, X, ArrowRight } from 'lucide-react';
+import { Trophy, BarChart4, Calendar, Menu, X, ArrowRight, Bell, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
@@ -21,87 +21,106 @@ const Header = () => {
   }, []);
   
   const navLinks = [
-    { text: "Upcoming Matches", href: "/", icon: <Calendar className="w-4 h-4" /> },
-    { text: "Leaderboard", href: "/leaderboard", icon: <BarChart4 className="w-4 h-4" /> },
-    { text: "Live Matches", href: "/live", icon: <Trophy className="w-4 h-4" /> },
+    { text: "Közelgő mérkőzések", href: "/", icon: <Calendar className="w-4 h-4" /> },
+    { text: "Ranglista", href: "/leaderboard", icon: <BarChart4 className="w-4 h-4" /> },
+    { text: "Élő mérkőzések", href: "/live", icon: <Trophy className="w-4 h-4" /> },
   ];
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'backdrop-blur-md bg-black/50 py-3 shadow-lg' : 'py-5'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      scrolled 
+      ? 'backdrop-blur-xl bg-black/30 py-3 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-b border-white/5' 
+      : 'py-5'
+    }`}>
       <div className="container px-4 mx-auto flex items-center justify-between">
+        {/* Logo Section with Neomorphic effect */}
         <Link 
           to="/"
-          className="relative flex items-center gap-2 group hover-glow"
+          className="relative flex items-center gap-3 group"
         >
-          <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-md">
-            <Trophy className="text-white h-5 w-5" />
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500/90 to-blue-600/90 flex items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_20px_rgba(59,130,246,0.3)] backdrop-blur-sm border border-blue-400/20 group-hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_30px_rgba(59,130,246,0.5)] transition-all duration-300">
+            <Trophy className="text-white h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-300">MatchPro</span>
-            <span className="text-[10px] -mt-1 text-blue-400/80">Fantasy Predictor</span>
+            <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-blue-100">WINMIX</span>
+            <span className="text-[10px] -mt-1 text-blue-400/80 tracking-widest">TIPSTER</span>
           </div>
           
-          {/* Subtle hover effect */}
-          <div className="absolute inset-0 rounded-full bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          {/* Hover effect - subtle glow */}
+          <div className="absolute -inset-1 rounded-lg bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-lg -z-10"></div>
         </Link>
         
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map((link, index) => (
-            <Link
-              key={index}
-              to={link.href}
-              className={`flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg transition-all duration-200
-                ${window.location.pathname === link.href 
-                  ? 'bg-white/10 text-white' 
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
-            >
-              {link.icon}
-              {link.text}
-            </Link>
-          ))}
+        {/* Desktop Navigation - Glassmorphism */}
+        <nav className="hidden md:flex items-center gap-2">
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-full pl-1 pr-1 py-1">
+            {navLinks.map((link, index) => (
+              <Link
+                key={index}
+                to={link.href}
+                className={`flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-full transition-all duration-300
+                  ${window.location.pathname === link.href 
+                    ? 'bg-gradient-to-r from-blue-500/80 to-blue-600/80 text-white shadow-[0_2px_10px_rgba(59,130,246,0.3)]' 
+                    : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
+              >
+                {link.icon}
+                {link.text}
+              </Link>
+            ))}
+          </div>
+          
+          {/* Action Icons */}
+          <div className="flex items-center ml-2 gap-1">
+            <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-200">
+              <Search className="w-4 h-4 text-gray-300" />
+            </button>
+            <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-200 relative">
+              <Bell className="w-4 h-4 text-gray-300" />
+              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-blue-500"></span>
+            </button>
+          </div>
         </nav>
         
-        {/* User Section */}
-        <div className="hidden md:flex items-center gap-4">
+        {/* User Section with Neumorphic buttons */}
+        <div className="hidden md:flex items-center gap-3">
           <Link 
             to="/login" 
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200"
+            className="text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200 border-b border-transparent hover:border-white/50"
           >
-            Log in
+            Bejelentkezés
           </Link>
           <Link 
             to="/signup" 
-            className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-md hover:shadow-blue-500/25 transition-all duration-300"
+            className="group inline-flex items-center gap-1.5 relative overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white text-sm font-medium px-5 py-2.5 rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_20px_rgba(59,130,246,0.25)] transition-all duration-300"
           >
-            Sign up
-            <ArrowRight className="w-3.5 h-3.5" />
+            <span className="relative z-10">Regisztráció</span>
+            <ArrowRight className="w-3.5 h-3.5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/80 to-blue-600/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </Link>
         </div>
         
-        {/* Mobile Menu Toggle */}
+        {/* Mobile Menu Toggle with Neomorphic effect */}
         <button 
-          className="md:hidden flex items-center justify-center w-10 h-10 text-gray-200 hover:text-white transition-colors duration-200"
+          className="md:hidden flex items-center justify-center w-10 h-10 text-gray-200 bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle mobile menu"
         >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
       
-      {/* Mobile Menu */}
+      {/* Mobile Menu with Glassmorphism */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-16 bg-black/95 backdrop-blur-md z-40 animate-fade-in">
-          <div className="p-4 flex flex-col">
-            <div className="space-y-1 py-4">
+        <div className="md:hidden fixed inset-0 top-[72px] bg-black/80 backdrop-blur-xl z-40 animate-fade-in">
+          <div className="p-6 flex flex-col h-full">
+            <div className="space-y-2 py-4">
               {navLinks.map((link, index) => (
                 <Link
                   key={index}
                   to={link.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200
+                  className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-300
                     ${window.location.pathname === link.href 
-                      ? 'bg-white/10 text-white' 
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                      ? 'bg-gradient-to-r from-blue-500/20 to-blue-600/20 border border-blue-500/30 text-white' 
+                      : 'text-gray-300 hover:text-white hover:bg-white/5'}`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.icon}
@@ -110,25 +129,25 @@ const Header = () => {
               ))}
             </div>
             
-            <div className="mt-auto pt-4 border-t border-gray-800/50 flex items-center gap-3">
+            <div className="mt-auto pt-6 border-t border-gray-800/50 flex items-center gap-3">
               <Link 
                 to="/login" 
-                className="flex-1 py-3 text-center text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200 border border-gray-700 rounded-lg"
+                className="flex-1 py-3 text-center text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200 border border-gray-700/30 rounded-xl bg-white/5 backdrop-blur-sm"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Log in
+                Bejelentkezés
               </Link>
               <Link 
                 to="/signup" 
-                className="flex-1 py-3 text-center bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-medium rounded-lg"
+                className="flex-1 py-3 text-center bg-gradient-to-r from-blue-500/80 to-blue-600/80 shadow-[0_4px_12px_rgba(59,130,246,0.25)] backdrop-blur-sm text-white text-sm font-medium rounded-xl"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Sign up
+                Regisztráció
               </Link>
             </div>
             
-            <div className="mt-4 text-center">
-              <div className="text-xs text-gray-500">© 2023 MatchPro. All rights reserved.</div>
+            <div className="mt-6 text-center">
+              <div className="text-xs text-gray-500">© 2025 WinMix Tipster. Minden jog fenntartva.</div>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ChevronDown, Check } from 'lucide-react';
+import { ChevronDown, Star } from 'lucide-react';
 import { Team } from '../../types/match';
 import { teams } from '../../data/teams';
 
@@ -8,56 +8,68 @@ interface TeamSelectorProps {
   team: Team | null;
   isDropdownOpen: boolean;
   toggleDropdown: () => void;
-  setTeam: (team: Team) => void;
+  setTeam: (team: Team | null) => void;
   position: 'home' | 'away';
 }
 
-const TeamSelector: React.FC<TeamSelectorProps> = ({
-  team,
-  isDropdownOpen,
-  toggleDropdown,
+const TeamSelector: React.FC<TeamSelectorProps> = ({ 
+  team, 
+  isDropdownOpen, 
+  toggleDropdown, 
   setTeam,
   position
 }) => {
   return (
     <>
-      <button 
+      <button
         onClick={toggleDropdown}
-        className="flex items-center justify-between w-full px-4 py-2 text-sm bg-gradient-to-r from-blue-500/10 to-blue-600/10 hover:from-blue-500/20 hover:to-blue-600/20 border border-blue-500/20 rounded-lg text-white transition-all duration-300 touch-feedback active:scale-95"
+        className={`w-full py-2.5 px-3 text-sm font-medium rounded-xl bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm border transition-all duration-300 flex items-center justify-between ${
+          isDropdownOpen
+            ? 'border-blue-500/30 shadow-[0_4px_15px_rgba(59,130,246,0.15)]'
+            : 'border-white/10 hover:border-white/20'
+        }`}
+        aria-expanded={isDropdownOpen}
+        aria-haspopup="listbox"
       >
-        {team ? (
-          <div className="flex items-center gap-2">
-            <img src={team.logo} alt={team.name} className="w-5 h-5 object-contain" />
-            {team.name}
-          </div>
-        ) : (
-          `Select ${position} team`
-        )}
-        <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+        <span className="text-gray-300">
+          {team ? team.name : `Válassz ${position === 'home' ? 'hazai' : 'vendég'} csapatot`}
+        </span>
+        <ChevronDown
+          className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
+            isDropdownOpen ? 'transform rotate-180' : ''
+          }`}
+        />
       </button>
       
       {isDropdownOpen && (
-        <div className="absolute z-10 w-full mt-2 bg-gray-900/95 backdrop-blur-sm border border-gray-800 rounded-lg shadow-xl overflow-hidden animate-fade-in">
-          {teams.map((teamOption, index) => (
-            <button
-              key={teamOption.id}
-              onClick={() => {
-                setTeam(teamOption);
-                toggleDropdown();
-              }}
-              className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-white hover:bg-blue-500/10 transition-colors duration-200 border-b border-gray-800/50 last:border-0 touch-feedback"
-              style={{ animationDelay: `${0.05 * index}s` }}
-            >
-              <img src={teamOption.logo} alt={teamOption.name} className="w-5 h-5 object-contain" />
-              <div className="flex-1 text-left">
-                <div className="font-medium">{teamOption.name}</div>
-                <div className="text-xs text-gray-400">Position: #{teamOption.position}</div>
-              </div>
-              {team?.id === teamOption.id && (
-                <Check className="w-4 h-4 text-blue-400 animate-pop" />
-              )}
-            </button>
-          ))}
+        <div className="absolute left-0 right-0 mt-2 max-h-48 overflow-y-auto rounded-xl border border-white/10 bg-gradient-to-br from-gray-800/95 to-gray-900/95 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.25)] z-10 animate-slide-in-bottom scrollbar-thin scrollbar-thumb-blue-900 scrollbar-track-gray-900">
+          <ul className="py-1" role="listbox">
+            {teams.map((teamOption) => (
+              <li
+                key={teamOption.id}
+                role="option"
+                aria-selected={team?.id === teamOption.id}
+                onClick={() => {
+                  setTeam(teamOption);
+                  toggleDropdown();
+                }}
+                className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors duration-200 ${
+                  team?.id === teamOption.id
+                    ? 'bg-blue-500/20 text-white'
+                    : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <div className="w-8 h-8 flex-shrink-0 rounded-full bg-gray-800 border border-white/5 flex items-center justify-center overflow-hidden">
+                  {teamOption.logo ? (
+                    <img src={teamOption.logo} alt={teamOption.name} className="w-6 h-6 object-contain" />
+                  ) : (
+                    <Star className="w-4 h-4 text-gray-600" />
+                  )}
+                </div>
+                <span className="flex-1 truncate">{teamOption.name}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </>
