@@ -5,7 +5,7 @@ import {
   User,
   Clock,
   Footprints,
-  Whistle,
+  AlertCircle, // Replacing Whistle with AlertCircle
   Award,
   PieChart,
   BarChart3,
@@ -135,7 +135,7 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ match, isOpen, onClose }) => 
               <span>{match.date || '2023-04-15'}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Whistle className="h-4 w-4" />
+              <AlertCircle className="h-4 w-4" />
               <span>{match.referee || 'John Referee'}</span>
             </div>
             <div className="flex items-center gap-1">
