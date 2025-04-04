@@ -1,4 +1,3 @@
-
 export interface Team {
   id: number;
   name: string;
@@ -42,4 +41,28 @@ export interface MatchProps {
   isSelectable?: boolean;
   league?: League;
   headToHead?: HeadToHead[];
+}
+
+// New types for pattern analysis
+export interface HalfTimeFullTimePattern {
+  id: number;
+  homeTeam: string;
+  awayTeam: string;
+  htHomeScore: number;
+  htAwayScore: number;
+  ftHomeScore: number;
+  ftAwayScore: number;
+  turnaround: boolean; // Indicates if the result changed from HT to FT
+  turnaroundType: 'home-to-away' | 'away-to-home' | 'draw-to-home' | 'draw-to-away' | 'home-to-draw' | 'away-to-draw' | 'none';
+  date: string;
+  consistency: number; // 0-100% how consistent this pattern is
+}
+
+export interface TurnaroundPrediction {
+  homeTeam: string;
+  awayTeam: string;
+  predictedOutcome: 'turnaround' | 'no-turnaround';
+  confidenceScore: number; // 0-100%
+  consistentPatternCount: number; // How many consistent patterns support this prediction
+  odds: number; // Potential odds for this outcome
 }
