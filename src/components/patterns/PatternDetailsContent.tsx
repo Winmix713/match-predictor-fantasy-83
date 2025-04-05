@@ -85,8 +85,8 @@ const PatternDetailsContent: React.FC<PatternDetailsContentProps> = ({ pattern }
 // Helper function to get pattern results for a specific pattern
 function getPatternResultsForPattern(patternId: string): PatternDetectionResult[] {
   // This would normally fetch from a data source or context
-  // For now, we're using sample data from the original component
-  return [
+  // For now, we're using sample data
+  const results: PatternDetectionResult[] = [
     {
       patternId: 'p1',
       patternName: 'Draw to Away Win Turnaround',
@@ -155,7 +155,9 @@ function getPatternResultsForPattern(patternId: string): PatternDetectionResult[
         'Teams with strong bench strength show this pattern more consistently'
       ]
     }
-  ].filter(result => result.patternId === patternId);
+  ];
+  
+  return results.filter(result => result.patternId === patternId);
 }
 
 export default PatternDetailsContent;
