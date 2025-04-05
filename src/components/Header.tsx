@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { BarChart4, Calendar, Menu, X, ArrowRight, Bell, Search, Trophy, Brain } from 'lucide-react';
+import { Calendar, Menu, X, ArrowRight, Bell, Search, Trophy, Brain } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from './Logo';
 import FancyNavigation from './FancyNavigation';
@@ -39,27 +39,8 @@ const Header = () => {
         {/* Logo Component */}
         <Logo />
         
-        {/* Fancy Navigation for Desktop */}
+        {/* Modern Navigation for Desktop */}
         <FancyNavigation navLinks={navLinks} />
-        
-        {/* Regular Navigation - Hidden when FancyNavigation is visible */}
-        <nav className="md:hidden flex items-center gap-2">
-          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-full pl-1 pr-1 py-1">
-            {navLinks.map((link, index) => (
-              <Link
-                key={index}
-                to={link.href}
-                className={`flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-full transition-all duration-300
-                  ${location.pathname === link.href 
-                    ? 'bg-gradient-to-r from-blue-500/80 to-blue-600/80 text-white shadow-[0_2px_10px_rgba(59,130,246,0.3)]' 
-                    : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
-              >
-                {link.icon}
-                {link.text}
-              </Link>
-            ))}
-          </div>
-        </nav>
         
         {/* User Section with Neumorphic buttons */}
         <div className="hidden md:flex items-center gap-3">
