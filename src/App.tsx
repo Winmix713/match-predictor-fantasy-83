@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Matches from "./pages/Matches";
 import NotFound from "./pages/NotFound";
 import AdvancedPattern from "./pages/AdvancedPattern";
+import Analysis from "./pages/Analysis";
+import League from "./pages/League";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/matches" element={<Matches />} />
           <Route path="/advanced-pattern" element={<AdvancedPattern />} />
+          <Route path="/analysis" element={<Analysis />} />
+          <Route path="/league" element={<League />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

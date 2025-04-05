@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { BarChart4, Calendar, Menu, X, ArrowRight, Bell, Search, Trophy } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { BarChart4, Calendar, Menu, X, ArrowRight, Bell, Search, Trophy, Brain } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import Logo from './Logo';
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -23,8 +24,8 @@ const Header = () => {
   
   const navLinks = [
     { text: "Mérkőzések", href: "/matches", icon: <Calendar className="w-4 h-4" /> },
-    { text: "Ranglista", href: "/leaderboard", icon: <BarChart4 className="w-4 h-4" /> },
-    { text: "Élő mérkőzések", href: "/live", icon: <Trophy className="w-4 h-4" /> },
+    { text: "V-Sports Elemzés", href: "/analysis", icon: <Brain className="w-4 h-4" /> },
+    { text: "Bajnokság", href: "/league", icon: <Trophy className="w-4 h-4" /> },
   ];
 
   return (
@@ -45,7 +46,7 @@ const Header = () => {
                 key={index}
                 to={link.href}
                 className={`flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-full transition-all duration-300
-                  ${window.location.pathname === link.href 
+                  ${location.pathname === link.href 
                     ? 'bg-gradient-to-r from-blue-500/80 to-blue-600/80 text-white shadow-[0_2px_10px_rgba(59,130,246,0.3)]' 
                     : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
               >
@@ -105,7 +106,7 @@ const Header = () => {
                   key={index}
                   to={link.href}
                   className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-300
-                    ${window.location.pathname === link.href 
+                    ${location.pathname === link.href 
                       ? 'bg-gradient-to-r from-blue-500/20 to-blue-600/20 border border-blue-500/30 text-white' 
                       : 'text-gray-300 hover:text-white hover:bg-white/5'}`}
                   onClick={() => setMobileMenuOpen(false)}
