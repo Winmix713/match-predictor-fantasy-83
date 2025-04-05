@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { Brain, Database, LineChart, PieChart, BarChart4, RefreshCcw, TrendingUp, AlertCircle } from 'lucide-react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Link } from 'react-router-dom';
 import PatternAnalysis from './PatternAnalysis';
 
 const PredictionSystem = () => {
@@ -67,7 +67,6 @@ const PredictionSystem = () => {
   };
 
   const simulateNewPrediction = () => {
-    // Szimulált új predikció - véletlenszerű pontosság generálása
     const newAccuracy = Math.floor(Math.random() * 15) + 70; // 70-85% közötti érték
     setAccuracy(newAccuracy);
   };
@@ -205,7 +204,7 @@ const PredictionSystem = () => {
                     <TableHead className="text-gray-400 font-normal">Vendég csapat</TableHead>
                     <TableHead className="text-gray-400 font-normal text-center">Predikció</TableHead>
                     <TableHead className="text-gray-400 font-normal text-center">Megbízhatóság</TableHead>
-                    <TableHead className="text-gray-400 font-normal text-center">Vártható gólok (H)</TableHead>
+                    <TableHead className="text-gray-400 font-normal text-center">Várható gólok (H)</TableHead>
                     <TableHead className="text-gray-400 font-normal text-center">Várható gólok (V)</TableHead>
                     <TableHead className="text-gray-400 font-normal text-center">Korábbi meccsek</TableHead>
                   </TableRow>
@@ -241,8 +240,20 @@ const PredictionSystem = () => {
           </div>
         </TabsContent>
         
-        {/* Pattern Analysis Tab */}
+        {/* Pattern Analysis Tab with new advanced analysis link */}
         <TabsContent value="patterns" className="pt-6">
+          <div className="mb-6 flex justify-between items-center">
+            <div></div>
+            <Link to="/advanced-pattern">
+              <Button 
+                variant="outline" 
+                className="bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20 flex items-center gap-2"
+              >
+                <BarChart4 className="h-4 w-4" />
+                Speciális mintázatelemzés
+              </Button>
+            </Link>
+          </div>
           <PatternAnalysis />
         </TabsContent>
         
