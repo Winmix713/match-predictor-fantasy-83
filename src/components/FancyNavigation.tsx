@@ -14,24 +14,51 @@ const FancyNavigation: React.FC<{ navLinks: NavItem[] }> = ({ navLinks }) => {
 
   return (
     <div className="hidden md:flex items-center justify-center">
-      <div className="bg-black/80 backdrop-blur-md border border-white/10 rounded-2xl px-1 py-1">
-        {navLinks.map((link, index) => {
-          const isActive = location.pathname === link.href;
-          
-          return (
-            <Link
-              key={index}
-              to={link.href}
-              className={`flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-xl transition-all duration-300
-                ${isActive 
-                  ? 'bg-blue-600 text-white' 
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
-            >
-              {link.icon}
-              {link.text}
-            </Link>
-          );
-        })}
+      <div className="area">
+        <div className="area-wrapper">
+          <div className="wrapper">
+            <div className="frame">
+              <div className="frame-inner"></div>
+              <div className="frame-black"></div>
+              <div className="frame-buttons">
+                {navLinks.map((link, index) => {
+                  const isActive = location.pathname === link.href;
+                  const wrapClass = `wrap wrap-${index + 1}`;
+                  
+                  return (
+                    <div key={index} className={wrapClass}>
+                      <input 
+                        type="radio" 
+                        name="r" 
+                        checked={isActive}
+                        onChange={() => {}} // React requires onChange for controlled components
+                      />
+                      <Link to={link.href} className={`button button-${index + 1}`}>
+                        <span className="flex items-center gap-2">
+                          {link.icon}
+                          {link.text}
+                          {index === 0 && (
+                            <svg height="16" width="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-1">
+                              <path d="M12 4.5v15m0-15-6 6m6-6 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          )}
+                          {index === 1 && (
+                            <div className="play">
+                              <span className="play-text">▶</span>
+                            </div>
+                          )}
+                        </span>
+                      </Link>
+                      <div className="layer layer-1"></div>
+                      <div className="layer layer-2"></div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="noise"></div>
+          </div>
+        </div>
       </div>
     </div>
   );
