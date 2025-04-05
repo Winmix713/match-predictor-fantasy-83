@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { BarChart4, Calendar, Menu, X, ArrowRight, Bell, Search, Trophy, Brain } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from './Logo';
+import FancyNavigation from './FancyNavigation';
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -38,8 +39,11 @@ const Header = () => {
         {/* Logo Component */}
         <Logo />
         
-        {/* Desktop Navigation - Glassmorphism */}
-        <nav className="hidden md:flex items-center gap-2">
+        {/* Fancy Navigation for Desktop */}
+        <FancyNavigation navLinks={navLinks} />
+        
+        {/* Regular Navigation - Hidden when FancyNavigation is visible */}
+        <nav className="md:hidden flex items-center gap-2">
           <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-full pl-1 pr-1 py-1">
             {navLinks.map((link, index) => (
               <Link
@@ -54,17 +58,6 @@ const Header = () => {
                 {link.text}
               </Link>
             ))}
-          </div>
-          
-          {/* Action Icons */}
-          <div className="flex items-center ml-2 gap-1">
-            <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-200">
-              <Search className="w-4 h-4 text-gray-300" />
-            </button>
-            <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-200 relative">
-              <Bell className="w-4 h-4 text-gray-300" />
-              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-blue-500"></span>
-            </button>
           </div>
         </nav>
         
