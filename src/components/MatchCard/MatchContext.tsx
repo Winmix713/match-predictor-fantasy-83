@@ -1,6 +1,8 @@
 
 import React, { createContext, useState, useContext } from 'react';
 import { Team, PredictionType, HeadToHead } from '../../types/match';
+import { toast } from 'sonner'; // Import toast directly
+import { generateHeadToHead } from '../../data/teams'; // Import directly
 
 interface MatchContextType {
   homeTeam: Team | null;
@@ -54,8 +56,7 @@ export const MatchProvider: React.FC<MatchProviderProps> = ({
   // Calculate head-to-head data
   React.useEffect(() => {
     if (homeTeam && awayTeam) {
-      // Import here to avoid circular dependencies
-      const { generateHeadToHead } = require('../../data/teams');
+      // Direct import now, not using require
       setHeadToHead(generateHeadToHead(homeTeam.id, awayTeam.id));
     }
   }, [homeTeam, awayTeam]);
@@ -80,8 +81,7 @@ export const MatchProvider: React.FC<MatchProviderProps> = ({
     setIsSubmitting(true);
     
     try {
-      // Import toast here to avoid circular dependencies
-      const { toast } = require('sonner');
+      // Direct import now, not using require
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -104,7 +104,6 @@ export const MatchProvider: React.FC<MatchProviderProps> = ({
         className: 'bg-green-500/90'
       });
     } catch (error) {
-      const { toast } = require('sonner');
       toast.error('Failed to submit prediction. Please try again.', {
         duration: 4000,
         className: 'bg-red-500/90'
