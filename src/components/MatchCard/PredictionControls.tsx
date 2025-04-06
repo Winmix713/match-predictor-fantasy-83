@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Check } from 'lucide-react';
-import { Team } from '../../types/match';
+import { Team, PredictionType } from '../../types/match';
 
 interface PredictionControlsProps {
   selectedPrediction: 'home' | 'draw' | 'away' | null;

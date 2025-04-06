@@ -18,19 +18,20 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
   setIsOpen,
   onSelect
 }) => {
+  // Format the label as plain text string
+  const getLabel = () => {
+    if (dateRange.from) {
+      return dateRange.to 
+        ? `${format(dateRange.from, 'PP')} - ${format(dateRange.to, 'PP')}`
+        : format(dateRange.from, 'PP');
+    }
+    return "Date Range";
+  };
+
   return (
     <FilterPopover
       icon={<CalendarIcon className="h-4 w-4" />}
-      label={
-        dateRange.from ? (
-          <span>
-            {format(dateRange.from, 'PP')} 
-            {dateRange.to ? ` - ${format(dateRange.to, 'PP')}` : ''}
-          </span>
-        ) : (
-          <span>Date Range</span>
-        )
-      }
+      label={getLabel()}
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       selectedCount={dateRange.from || dateRange.to ? 1 : 0}

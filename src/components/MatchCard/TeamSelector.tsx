@@ -3,27 +3,34 @@ import React from 'react';
 import { ChevronDown, Star } from 'lucide-react';
 import { Team } from '../../types/match';
 import { teams } from '../../data/teams';
+import { useMatchContext } from './MatchContext';
 
 interface TeamSelectorProps {
-  team: Team | null;
-  isDropdownOpen: boolean;
-  toggleDropdown: () => void;
-  setTeam: (team: Team | null) => void;
   position: 'home' | 'away';
 }
 
-const TeamSelector: React.FC<TeamSelectorProps> = ({ 
-  team, 
-  isDropdownOpen, 
-  toggleDropdown, 
-  setTeam,
-  position
-}) => {
+const TeamSelector: React.FC<TeamSelectorProps> = ({ position }) => {
+  const { 
+    homeTeam,
+    awayTeam,
+    isHomeDropdownOpen,
+    isAwayDropdownOpen,
+    toggleHomeDropdown,
+    toggleAwayDropdown,
+    setHomeTeam,
+    setAwayTeam
+  } = useMatchContext();
+
+  const team = position === 'home' ? homeTeam : awayTeam;
+  const isDropdownOpen = position === 'home' ? isHomeDropdownOpen : isAwayDropdownOpen;
+  const toggleDropdown = position === 'home' ? toggleHomeDropdown : toggleAwayDropdown;
+  const setTeam = position === 'home' ? setHomeTeam : setAwayTeam;
+
   return (
     <>
       <button
         onClick={toggleDropdown}
-        className={`w-full py-2.5 px-3 text-sm font-medium rounded-xl bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm border transition-all duration-300 flex items-center justify-between ${
+        className={`w-full py-2.5 px-3 text-sm font-medium rounded-xl bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm border transition-all duration-300 ${
           isDropdownOpen
             ? 'border-blue-500/30 shadow-[0_4px_15px_rgba(59,130,246,0.15)]'
             : 'border-white/10 hover:border-white/20'
