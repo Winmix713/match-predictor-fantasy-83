@@ -1,8 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
-import MatchSelectionSection from '../components/MatchSelectionSection';
+import MatchSelectionSection from '../components/match-selection/MatchSelectionSection';
 import CallToAction from '../components/CallToAction';
 import Footer from '../components/Footer';
 import TopPredictions from '../components/TopPredictions';
