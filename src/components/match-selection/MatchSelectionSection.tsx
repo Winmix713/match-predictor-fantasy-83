@@ -8,9 +8,9 @@ import MatchCardGrid from './MatchCardGrid';
 import PredictionResultsSection from './PredictionResultsSection';
 
 const MatchSelectionSection = () => {
-  // State for selected teams in each match card (now 8 matches)
+  // State for selected teams in each match card (now 8 matches with none selected by default)
   const [selectedTeams, setSelectedTeams] = useState([
-    { home: PREMIER_LEAGUE_TEAMS.find(t => t.id === "arsenal"), away: PREMIER_LEAGUE_TEAMS.find(t => t.id === "chelsea") },
+    { home: null, away: null },
     { home: null, away: null },
     { home: null, away: null },
     { home: null, away: null },
