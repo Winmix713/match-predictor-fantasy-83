@@ -2,9 +2,7 @@
 import React, { useEffect } from 'react';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
-import UpcomingMatches from '../components/UpcomingMatches';
-import ValueProposition from '../components/ValueProposition';
-import CallToAction from '../components/CallToAction';
+import MatchSelectionSection from '../components/MatchSelectionSection';
 import Footer from '../components/Footer';
 
 const Index = () => {
@@ -26,14 +24,8 @@ const Index = () => {
         <section id="hero">
           <HeroSection />
         </section>
-        <section id="upcoming-matches">
-          <UpcomingMatches />
-        </section>
-        <section id="value-proposition">
-          <ValueProposition />
-        </section>
-        <section id="call-to-action">
-          <CallToAction />
+        <section id="match-selection">
+          <MatchSelectionSection />
         </section>
       </main>
       <Footer />
