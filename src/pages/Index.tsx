@@ -3,7 +3,9 @@ import React, { useEffect } from 'react';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import MatchSelectionSection from '../components/MatchSelectionSection';
+import CallToAction from '../components/CallToAction';
 import Footer from '../components/Footer';
+import TopPredictions from '../components/TopPredictions';
 
 const Index = () => {
   // Scroll to top on page load
@@ -26,6 +28,11 @@ const Index = () => {
         </section>
         <section id="match-selection">
           <MatchSelectionSection />
+        </section>
+        <section id="call-to-action">
+          <CallToAction>
+            <TopPredictions />
+          </CallToAction>
         </section>
       </main>
       <Footer />

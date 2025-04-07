@@ -1,15 +1,15 @@
 
 import React, { useState } from 'react';
-import { Calendar, ChevronDown, ArrowRight, Star } from 'lucide-react';
+import { Calendar, ChevronDown, ArrowRight, Star, Trophy } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { toast } from 'sonner';
-import { teams } from '../data/teams';
+import { PREMIER_LEAGUE_TEAMS } from '../data/premier-league-teams';
 
 const MatchSelectionSection = () => {
   // State for selected teams in each match card
   const [selectedTeams, setSelectedTeams] = useState([
-    { home: teams[12], away: teams[8] }, // Default to London Ágyúk vs Manchester Kék for first card
+    { home: PREMIER_LEAGUE_TEAMS.find(t => t.id === "arsenal"), away: PREMIER_LEAGUE_TEAMS.find(t => t.id === "chelsea") }, // Default to London Ágyúk vs Chelsea for first card
     { home: null, away: null },
     { home: null, away: null },
     { home: null, away: null },
@@ -20,9 +20,12 @@ const MatchSelectionSection = () => {
   // State for selected filter in prediction results section
   const [resultFilter, setResultFilter] = useState("all");
   
+  // State to track if prediction has been run
+  const [predictionRun, setPredictionRun] = useState(false);
+  
   // Update team selection
   const handleTeamSelect = (matchIndex: number, side: 'home' | 'away', teamId: string) => {
-    const team = teams.find(t => t.id.toString() === teamId) || null;
+    const team = PREMIER_LEAGUE_TEAMS.find(t => t.id === teamId) || null;
     
     setSelectedTeams(prev => {
       const updated = [...prev];
@@ -47,6 +50,8 @@ const MatchSelectionSection = () => {
     toast.success(`${completeMatches} mérkőzés predikciója elindítva`, {
       description: "Az eredmények hamarosan elérhetőek lesznek"
     });
+    
+    setPredictionRun(true);
   };
 
   return (
@@ -77,19 +82,19 @@ const MatchSelectionSection = () => {
               {/* Home Team Select */}
               <div className="mb-3">
                 <Select 
-                  value={match.home?.id?.toString() || ""} 
+                  value={match.home?.id || ""} 
                   onValueChange={(value) => handleTeamSelect(index, 'home', value)}
                 >
                   <SelectTrigger className="w-full bg-black/60 border-white/10 text-white">
                     <SelectValue placeholder="Válassz hazai csapatot" />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-900 text-white border-white/10 max-h-[300px]">
-                    {teams.map(team => (
-                      <SelectItem key={team.id.toString()} value={team.id.toString()}>
+                    {PREMIER_LEAGUE_TEAMS.map(team => (
+                      <SelectItem key={team.id} value={team.id}>
                         <div className="flex items-center gap-2">
-                          {team.logo && (
+                          {team.logoUrl && (
                             <img 
-                              src={team.logo} 
+                              src={team.logoUrl} 
                               alt={`${team.name} logo`} 
                               className="w-6 h-6 object-contain"
                             />
@@ -105,19 +110,19 @@ const MatchSelectionSection = () => {
               {/* Away Team Select */}
               <div className="mb-3">
                 <Select 
-                  value={match.away?.id?.toString() || ""} 
+                  value={match.away?.id || ""} 
                   onValueChange={(value) => handleTeamSelect(index, 'away', value)}
                 >
                   <SelectTrigger className="w-full bg-black/60 border-white/10 text-white">
                     <SelectValue placeholder="Válassz vendég csapatot" />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-900 text-white border-white/10 max-h-[300px]">
-                    {teams.map(team => (
-                      <SelectItem key={team.id.toString()} value={team.id.toString()}>
+                    {PREMIER_LEAGUE_TEAMS.map(team => (
+                      <SelectItem key={team.id} value={team.id}>
                         <div className="flex items-center gap-2">
-                          {team.logo && (
+                          {team.logoUrl && (
                             <img 
-                              src={team.logo} 
+                              src={team.logoUrl} 
                               alt={`${team.name} logo`} 
                               className="w-6 h-6 object-contain"
                             />
@@ -135,7 +140,7 @@ const MatchSelectionSection = () => {
                 <div className="flex items-center justify-center gap-4 mt-4 mb-2">
                   <div className="flex flex-col items-center">
                     <img 
-                      src={match.home.logo} 
+                      src={match.home.logoUrl} 
                       alt={`${match.home.name} logo`} 
                       className="w-12 h-12 object-contain"
                     />
@@ -144,7 +149,7 @@ const MatchSelectionSection = () => {
                   <span className="text-gray-400 font-bold">VS</span>
                   <div className="flex flex-col items-center">
                     <img 
-                      src={match.away.logo} 
+                      src={match.away.logoUrl} 
                       alt={`${match.away.name} logo`} 
                       className="w-12 h-12 object-contain"
                     />
@@ -156,146 +161,101 @@ const MatchSelectionSection = () => {
           ))}
         </div>
         
-        {/* Prediction Button */}
+        {/* Prediction Button - Using the same styling as the "Kezdj el tippelni most" button in Hero */}
         <div className="flex justify-center my-8 animate-fade-in" style={{animationDelay: "0.5s"}}>
           <Button 
             onClick={handleSubmitPredictions}
-            className="w-full max-w-xl py-6 text-lg font-medium bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black rounded-lg flex items-center justify-center gap-2"
+            className="w-full max-w-xl py-6 text-lg font-medium bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg flex items-center justify-center gap-2 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 overflow-hidden relative group"
           >
-            Predikciók futtatása
-            <ArrowRight className="w-5 h-5" />
+            <span className="z-10 relative">Predikciók futtatása</span>
+            <ArrowRight className="w-5 h-5 z-10 relative group-hover:translate-x-1 transition-transform duration-300" />
+            <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shine" />
           </Button>
         </div>
         
-        {/* Predictions Results Section */}
-        {selectedTeams.some(match => match.home && match.away) && (
+        {/* Predictions Results Section - Styled like the Hero card */}
+        {predictionRun && selectedTeams[0].home && selectedTeams[0].away && (
           <div className="mt-16 animate-fade-in" style={{animationDelay: "0.7s"}}>
             <h3 className="text-2xl font-bold text-white mb-6">Predikciók eredménye</h3>
             
-            {/* Filter */}
-            <div className="mb-6 flex items-center gap-3">
-              <span className="text-gray-400 text-sm">Rendezés:</span>
-              <Select value={resultFilter} onValueChange={setResultFilter}>
-                <SelectTrigger className="w-64 bg-black/60 border-white/10 text-white">
-                  <SelectValue placeholder="Filter by" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-900 text-white border-white/10">
-                  <SelectItem value="all">Mindkét csapat gólját</SelectItem>
-                  <SelectItem value="home">Hazai csapat góljai</SelectItem>
-                  <SelectItem value="away">Vendég csapat góljai</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            {/* Results Card for the first match */}
-            {selectedTeams[0].home && selectedTeams[0].away && (
-              <div className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-lg p-6 mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-medium text-white">
-                      {selectedTeams[0].home.name} - {selectedTeams[0].away.name}
-                    </span>
-                    <Button variant="ghost" size="sm" className="p-1 h-auto text-yellow-400">
-                      <Star className="w-4 h-4" />
-                    </Button>
+            {/* Updated Match Card to match provided design */}
+            <div className="max-w-[500px] mx-auto">
+              <div className="w-full rounded-[2rem] overflow-hidden backdrop-blur-xl bg-gradient-to-br from-gray-900/80 via-gray-900/70 to-gray-900/80 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.4)]">
+                <div className="h-full w-full p-8 flex flex-col">
+                  <div className="flex justify-between items-center mb-6">
+                    <div className="bg-blue-500/20 backdrop-blur-md rounded-full px-3 py-1.5 border border-blue-400/20">
+                      <span className="text-xs font-medium text-blue-300">Élő mérkőzés</span>
+                    </div>
+                    <div className="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-full backdrop-blur-md border border-blue-400/10">21:00</div>
                   </div>
-                  <span className="text-sm text-gray-400">Premier League Head-to-Head</span>
-                </div>
-                
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {/* Team Logos */}
-                  <div className="flex justify-between items-center col-span-1 lg:col-span-3 mb-2">
+                  
+                  <div className="flex items-center justify-between mt-4">
                     <div className="flex flex-col items-center">
-                      <img 
-                        src={selectedTeams[0].home.logo} 
-                        alt={selectedTeams[0].home.name}
-                        className="w-16 h-16 object-contain" 
-                      />
-                      <span className="mt-2 text-sm text-gray-300">{selectedTeams[0].home.name}</span>
+                      <div className="w-18 h-18 rounded-full bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-xl border border-white/5 mb-3 p-4 flex items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+                        <img 
+                          src={selectedTeams[0].home.logoUrl} 
+                          alt={selectedTeams[0].home.name} 
+                          className="w-12 h-12 object-contain"
+                        />
+                      </div>
+                      <span className="text-sm font-medium text-white">{selectedTeams[0].home.name}</span>
+                      <span className="text-xs text-blue-400 mt-1">Otthon</span>
                     </div>
                     
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-yellow-400 mb-1">42</div>
-                      <div className="text-sm text-gray-400">Matches</div>
+                    <div className="flex flex-col items-center mx-4">
+                      <div className="text-lg font-bold mb-1 text-gray-400">VS</div>
+                      <div className="text-xs text-blue-400 py-1 px-3 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-400/10 animate-pulse-subtle">Élő</div>
                     </div>
                     
                     <div className="flex flex-col items-center">
-                      <img 
-                        src={selectedTeams[0].away.logo} 
-                        alt={selectedTeams[0].away.name}
-                        className="w-16 h-16 object-contain" 
-                      />
-                      <span className="mt-2 text-sm text-gray-300">{selectedTeams[0].away.name}</span>
+                      <div className="w-18 h-18 rounded-full bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-xl border border-white/5 mb-3 p-4 flex items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+                        <img 
+                          src={selectedTeams[0].away.logoUrl} 
+                          alt={selectedTeams[0].away.name} 
+                          className="w-12 h-12 object-contain"
+                        />
+                      </div>
+                      <span className="text-sm font-medium text-white">{selectedTeams[0].away.name}</span>
+                      <span className="text-xs text-blue-400 mt-1">Vendég</span>
                     </div>
                   </div>
                   
-                  {/* Stats Grid */}
-                  <div className="bg-black/60 rounded-lg p-4 flex flex-col items-center justify-center">
-                    <div className="text-2xl font-bold text-white">18</div>
-                    <div className="text-xs text-gray-400">Home Wins</div>
-                    <div className="text-sm font-bold text-yellow-400">42.9%</div>
-                  </div>
-                  
-                  <div className="bg-black/60 rounded-lg p-4 flex flex-col items-center justify-center">
-                    <div className="text-2xl font-bold text-white">12</div>
-                    <div className="text-xs text-gray-400">Draws</div>
-                    <div className="text-sm font-bold text-yellow-400">28.6%</div>
-                  </div>
-                  
-                  <div className="bg-black/60 rounded-lg p-4 flex flex-col items-center justify-center">
-                    <div className="text-2xl font-bold text-white">12</div>
-                    <div className="text-xs text-gray-400">Away Wins</div>
-                    <div className="text-sm font-bold text-yellow-400">28.6%</div>
-                  </div>
-                  
-                  {/* More Stats */}
-                  <div className="bg-black/60 rounded-lg p-4 flex flex-col items-center justify-center">
-                    <div className="text-xs text-gray-400">Home</div>
-                    <div className="text-lg font-bold text-white">1.74</div>
-                  </div>
-                  
-                  <div className="bg-black/60 rounded-lg p-4 flex flex-col items-center justify-center">
-                    <div className="text-xs text-gray-400">Avg. Goals</div>
-                    <div className="text-lg font-bold text-yellow-400">3.12</div>
-                  </div>
-                  
-                  <div className="bg-black/60 rounded-lg p-4 flex flex-col items-center justify-center">
-                    <div className="text-xs text-gray-400">Away</div>
-                    <div className="text-lg font-bold text-white">1.38</div>
-                  </div>
-                  
-                  {/* Progress Bar for Both Teams Scored */}
-                  <div className="col-span-1 lg:col-span-3 mt-3">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-xs text-gray-400">Both Teams Scored</span>
-                      <span className="text-xs text-yellow-400">57.14%</span>
+                  <div className="mt-8">
+                    <div className="text-sm text-white mb-2">Tipp esélyek</div>
+                    <div className="flex gap-1 items-center mt-2">
+                      <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                        <div className="h-full bg-blue-500 rounded-full" style={{width: '42%'}}></div>
+                      </div>
+                      <span className="text-xs text-blue-400 min-w-[30px] text-right">42%</span>
                     </div>
-                    <div className="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
-                      <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 h-full rounded-full" style={{ width: "57%" }}></div>
+                    <div className="flex gap-1 items-center mt-1.5">
+                      <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                        <div className="h-full bg-gray-500 rounded-full" style={{width: '28%'}}></div>
+                      </div>
+                      <span className="text-xs text-gray-400 min-w-[30px] text-right">28%</span>
+                    </div>
+                    <div className="flex gap-1 items-center mt-1.5">
+                      <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                        <div className="h-full bg-blue-500 rounded-full" style={{width: '30%'}}></div>
+                      </div>
+                      <span className="text-xs text-blue-400 min-w-[30px] text-right">30%</span>
                     </div>
                   </div>
                   
-                  {/* Form Indexes */}
-                  <div className="col-span-1 lg:col-span-3 grid grid-cols-2 gap-4 mt-2">
-                    <div>
-                      <div className="text-xs text-gray-400 mb-1">Home Form Index</div>
-                      <div className="text-lg font-bold text-yellow-400">40%</div>
-                    </div>
-                    
-                    <div>
-                      <div className="text-xs text-gray-400 mb-1">Away Form Index</div>
-                      <div className="text-lg font-bold text-yellow-400">40%</div>
-                    </div>
-                  </div>
-                  
-                  {/* Prediction Score */}
-                  <div className="col-span-1 lg:col-span-3 text-center mt-4">
-                    <div className="text-sm text-gray-400 mb-1">Prediction Score:</div>
-                    <div className="text-2xl font-bold text-yellow-400">6.00</div>
+                  <div className="grid grid-cols-3 gap-2 mt-6">
+                    <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)]">
+                      Hazai
+                    </button>
+                    <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)]">
+                      Döntetlen
+                    </button>
+                    <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)]">
+                      Vendég
+                    </button>
                   </div>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         )}
       </div>

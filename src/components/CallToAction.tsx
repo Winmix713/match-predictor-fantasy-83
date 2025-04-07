@@ -3,7 +3,11 @@ import React from 'react';
 import { ArrowRight, CheckCircle, Trophy as TrophyIcon, Star, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const CallToAction = () => {
+interface CallToActionProps {
+  children?: React.ReactNode;
+}
+
+const CallToAction: React.FC<CallToActionProps> = ({ children }) => {
   const benefits = [
     "Hozzáférés az összes előrejelzési funkcióhoz",
     "Csatlakozás exkluzív tippversenyekhez",
@@ -96,37 +100,43 @@ const CallToAction = () => {
                   </div>
                 </div>
                 
-                {/* Decorative image/illustration side with enhanced effects */}
+                {/* Right side: TopPredictions or default decorative image */}
                 <div className="relative h-full min-h-[350px] rounded-xl overflow-hidden">
-                  {/* Decorative 3D gradient background */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl backdrop-blur-sm"></div>
-                  
-                  {/* Animated pulse rings */}
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-blue-500/10 animate-pulse-subtle"></div>
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-blue-500/20 animate-pulse-subtle" style={{animationDelay: '0.5s'}}></div>
-                  
-                  {/* Trophy illustration with advanced 3D glow effect */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="relative">
-                      <div className="absolute -inset-10 bg-blue-500/20 rounded-full blur-[50px] animate-pulse-subtle"></div>
+                  {children ? (
+                    children
+                  ) : (
+                    <>
+                      {/* Default decorative 3D gradient background */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl backdrop-blur-sm"></div>
                       
-                      <div className="relative w-40 h-40 rounded-full bg-gradient-to-br from-blue-400/80 to-blue-600 flex items-center justify-center shadow-[0_8px_30px_rgba(59,130,246,0.5)] border border-blue-400/30 backdrop-blur-xl animate-float">
-                        <TrophyIcon className="text-white h-20 w-20 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
+                      {/* Animated pulse rings */}
+                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-blue-500/10 animate-pulse-subtle"></div>
+                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-blue-500/20 animate-pulse-subtle" style={{animationDelay: '0.5s'}}></div>
+                      
+                      {/* Trophy illustration with advanced 3D glow effect */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="relative">
+                          <div className="absolute -inset-10 bg-blue-500/20 rounded-full blur-[50px] animate-pulse-subtle"></div>
+                          
+                          <div className="relative w-40 h-40 rounded-full bg-gradient-to-br from-blue-400/80 to-blue-600 flex items-center justify-center shadow-[0_8px_30px_rgba(59,130,246,0.5)] border border-blue-400/30 backdrop-blur-xl animate-float">
+                            <TrophyIcon className="text-white h-20 w-20 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
+                          </div>
+                          
+                          {/* 3D lighting effect */}
+                          <div className="absolute top-1/4 left-1/4 w-10 h-10 rounded-full bg-white/40 blur-md"></div>
+                        </div>
                       </div>
                       
-                      {/* 3D lighting effect */}
-                      <div className="absolute top-1/4 left-1/4 w-10 h-10 rounded-full bg-white/40 blur-md"></div>
-                    </div>
-                  </div>
-                  
-                  {/* Decorative floating elements */}
-                  <div className="absolute top-[10%] right-[10%] w-10 h-10 rounded-full bg-gradient-to-br from-blue-500/40 to-blue-600/40 backdrop-blur-sm border border-blue-400/20 flex items-center justify-center shadow-[0_4px_20px_rgba(59,130,246,0.3)] animate-float" style={{animationDuration: '4s'}}>
-                    <Star className="text-white h-5 w-5" />
-                  </div>
-                  
-                  <div className="absolute bottom-[15%] left-[15%] w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500/30 to-purple-600/30 backdrop-blur-sm border border-purple-400/20 flex items-center justify-center shadow-[0_4px_20px_rgba(139,92,246,0.3)] animate-float" style={{animationDuration: '5s', animationDelay: '1s'}}>
-                    <Sparkles className="text-white h-4 w-4" />
-                  </div>
+                      {/* Decorative floating elements */}
+                      <div className="absolute top-[10%] right-[10%] w-10 h-10 rounded-full bg-gradient-to-br from-blue-500/40 to-blue-600/40 backdrop-blur-sm border border-blue-400/20 flex items-center justify-center shadow-[0_4px_20px_rgba(59,130,246,0.3)] animate-float" style={{animationDuration: '4s'}}>
+                        <Star className="text-white h-5 w-5" />
+                      </div>
+                      
+                      <div className="absolute bottom-[15%] left-[15%] w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500/30 to-purple-600/30 backdrop-blur-sm border border-purple-400/20 flex items-center justify-center shadow-[0_4px_20px_rgba(139,92,246,0.3)] animate-float" style={{animationDuration: '5s', animationDelay: '1s'}}>
+                        <Sparkles className="text-white h-4 w-4" />
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
