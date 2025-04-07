@@ -1,15 +1,18 @@
 
-import React, { useState } from 'react';
-import { Calendar, ChevronDown, ArrowRight, Star, Trophy } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import React, { useState, useMemo, useEffect } from 'react';
+import { Calendar, ArrowRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { toast } from 'sonner';
-import { PREMIER_LEAGUE_TEAMS } from '../data/premier-league-teams';
+import { PREMIER_LEAGUE_TEAMS, Team } from '../data/premier-league-teams';
+import MatchCard from './match/MatchCard';
+import PredictionResultCard from './match/PredictionResultCard';
 
 const MatchSelectionSection = () => {
-  // State for selected teams in each match card
+  // State for selected teams in each match card (now 8 matches)
   const [selectedTeams, setSelectedTeams] = useState([
-    { home: PREMIER_LEAGUE_TEAMS.find(t => t.id === "arsenal"), away: PREMIER_LEAGUE_TEAMS.find(t => t.id === "chelsea") }, // Default to London Ágyúk vs Chelsea for first card
+    { home: PREMIER_LEAGUE_TEAMS.find(t => t.id === "arsenal"), away: PREMIER_LEAGUE_TEAMS.find(t => t.id === "chelsea") },
+    { home: null, away: null },
+    { home: null, away: null },
     { home: null, away: null },
     { home: null, away: null },
     { home: null, away: null },
@@ -17,11 +20,45 @@ const MatchSelectionSection = () => {
     { home: null, away: null },
   ]);
   
-  // State for selected filter in prediction results section
-  const [resultFilter, setResultFilter] = useState("all");
-  
   // State to track if prediction has been run
   const [predictionRun, setPredictionRun] = useState(false);
+  
+  // Calculate all selected team IDs to exclude from dropdowns
+  const selectedTeamIds = useMemo(() => {
+    const ids: string[] = [];
+    selectedTeams.forEach(match => {
+      if (match.home) ids.push(match.home.id);
+      if (match.away) ids.push(match.away.id);
+    });
+    return ids;
+  }, [selectedTeams]);
+  
+  // Filter available teams (excluding already selected ones)
+  const availableTeams = useMemo(() => {
+    return PREMIER_LEAGUE_TEAMS.filter(team => !selectedTeamIds.includes(team.id));
+  }, [selectedTeamIds]);
+  
+  // Count completed matches
+  const completedMatchesCount = useMemo(() => {
+    return selectedTeams.filter(match => match.home && match.away).length;
+  }, [selectedTeams]);
+  
+  const allMatchesCompleted = useMemo(() => {
+    return completedMatchesCount === selectedTeams.length;
+  }, [completedMatchesCount, selectedTeams]);
+  
+  // Dispatch event when matches are selected or prediction is run
+  useEffect(() => {
+    if (predictionRun) {
+      const event = new CustomEvent('matchesSelected', {
+        detail: {
+          matches: selectedTeams,
+          complete: allMatchesCompleted
+        }
+      });
+      window.dispatchEvent(event);
+    }
+  }, [predictionRun, selectedTeams, allMatchesCompleted]);
   
   // Update team selection
   const handleTeamSelect = (matchIndex: number, side: 'home' | 'away', teamId: string) => {
@@ -29,6 +66,14 @@ const MatchSelectionSection = () => {
     
     setSelectedTeams(prev => {
       const updated = [...prev];
+      // If this team was previously selected somewhere else, remove it
+      updated.forEach((match, idx) => {
+        if (idx !== matchIndex) {
+          if (match.home?.id === teamId) updated[idx].home = null;
+          if (match.away?.id === teamId) updated[idx].away = null;
+        }
+      });
+      
       updated[matchIndex] = {
         ...updated[matchIndex],
         [side]: team
@@ -48,7 +93,7 @@ const MatchSelectionSection = () => {
     }
     
     toast.success(`${completeMatches} mérkőzés predikciója elindítva`, {
-      description: "Az eredmények hamarosan elérhetőek lesznek"
+      description: "Az eredmények elérhetőek alább"
     });
     
     setPredictionRun(true);
@@ -76,92 +121,23 @@ const MatchSelectionSection = () => {
         </div>
         
         {/* Match Selection Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {selectedTeams.map((match, index) => (
-            <div key={index} className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-lg p-5 animate-fade-in" style={{animationDelay: `${0.1 * index}s`}}>
-              {/* Home Team Select */}
-              <div className="mb-3">
-                <Select 
-                  value={match.home?.id || ""} 
-                  onValueChange={(value) => handleTeamSelect(index, 'home', value)}
-                >
-                  <SelectTrigger className="w-full bg-black/60 border-white/10 text-white">
-                    <SelectValue placeholder="Válassz hazai csapatot" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-900 text-white border-white/10 max-h-[300px]">
-                    {PREMIER_LEAGUE_TEAMS.map(team => (
-                      <SelectItem key={team.id} value={team.id}>
-                        <div className="flex items-center gap-2">
-                          {team.logoUrl && (
-                            <img 
-                              src={team.logoUrl} 
-                              alt={`${team.name} logo`} 
-                              className="w-6 h-6 object-contain"
-                            />
-                          )}
-                          <span>{team.name}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* Away Team Select */}
-              <div className="mb-3">
-                <Select 
-                  value={match.away?.id || ""} 
-                  onValueChange={(value) => handleTeamSelect(index, 'away', value)}
-                >
-                  <SelectTrigger className="w-full bg-black/60 border-white/10 text-white">
-                    <SelectValue placeholder="Válassz vendég csapatot" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-900 text-white border-white/10 max-h-[300px]">
-                    {PREMIER_LEAGUE_TEAMS.map(team => (
-                      <SelectItem key={team.id} value={team.id}>
-                        <div className="flex items-center gap-2">
-                          {team.logoUrl && (
-                            <img 
-                              src={team.logoUrl} 
-                              alt={`${team.name} logo`} 
-                              className="w-6 h-6 object-contain"
-                            />
-                          )}
-                          <span>{team.name}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* Team logos preview */}
-              {match.home && match.away && (
-                <div className="flex items-center justify-center gap-4 mt-4 mb-2">
-                  <div className="flex flex-col items-center">
-                    <img 
-                      src={match.home.logoUrl} 
-                      alt={`${match.home.name} logo`} 
-                      className="w-12 h-12 object-contain"
-                    />
-                    <span className="text-xs text-gray-300 mt-1 text-center">{match.home.name}</span>
-                  </div>
-                  <span className="text-gray-400 font-bold">VS</span>
-                  <div className="flex flex-col items-center">
-                    <img 
-                      src={match.away.logoUrl} 
-                      alt={`${match.away.name} logo`} 
-                      className="w-12 h-12 object-contain"
-                    />
-                    <span className="text-xs text-gray-300 mt-1 text-center">{match.away.name}</span>
-                  </div>
-                </div>
-              )}
-            </div>
+            <MatchCard
+              key={index}
+              index={index}
+              match={match}
+              availableTeams={[
+                ...(match.home ? [match.home] : []),
+                ...(match.away ? [match.away] : []),
+                ...availableTeams
+              ]}
+              onTeamSelect={handleTeamSelect}
+            />
           ))}
         </div>
         
-        {/* Prediction Button - Using the same styling as the "Kezdj el tippelni most" button in Hero */}
+        {/* Prediction Button */}
         <div className="flex justify-center my-8 animate-fade-in" style={{animationDelay: "0.5s"}}>
           <Button 
             onClick={handleSubmitPredictions}
@@ -173,89 +149,30 @@ const MatchSelectionSection = () => {
           </Button>
         </div>
         
-        {/* Predictions Results Section - Styled like the Hero card */}
-        {predictionRun && selectedTeams[0].home && selectedTeams[0].away && (
+        {/* Predictions Results Section */}
+        {predictionRun && selectedTeams.some(match => match.home && match.away) && !allMatchesCompleted && (
           <div className="mt-16 animate-fade-in" style={{animationDelay: "0.7s"}}>
             <h3 className="text-2xl font-bold text-white mb-6">Predikciók eredménye</h3>
             
-            {/* Updated Match Card to match provided design */}
-            <div className="max-w-[500px] mx-auto">
-              <div className="w-full rounded-[2rem] overflow-hidden backdrop-blur-xl bg-gradient-to-br from-gray-900/80 via-gray-900/70 to-gray-900/80 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.4)]">
-                <div className="h-full w-full p-8 flex flex-col">
-                  <div className="flex justify-between items-center mb-6">
-                    <div className="bg-blue-500/20 backdrop-blur-md rounded-full px-3 py-1.5 border border-blue-400/20">
-                      <span className="text-xs font-medium text-blue-300">Élő mérkőzés</span>
-                    </div>
-                    <div className="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-full backdrop-blur-md border border-blue-400/10">21:00</div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex flex-col items-center">
-                      <div className="w-18 h-18 rounded-full bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-xl border border-white/5 mb-3 p-4 flex items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
-                        <img 
-                          src={selectedTeams[0].home.logoUrl} 
-                          alt={selectedTeams[0].home.name} 
-                          className="w-12 h-12 object-contain"
-                        />
-                      </div>
-                      <span className="text-sm font-medium text-white">{selectedTeams[0].home.name}</span>
-                      <span className="text-xs text-blue-400 mt-1">Otthon</span>
-                    </div>
-                    
-                    <div className="flex flex-col items-center mx-4">
-                      <div className="text-lg font-bold mb-1 text-gray-400">VS</div>
-                      <div className="text-xs text-blue-400 py-1 px-3 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-400/10 animate-pulse-subtle">Élő</div>
-                    </div>
-                    
-                    <div className="flex flex-col items-center">
-                      <div className="w-18 h-18 rounded-full bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-xl border border-white/5 mb-3 p-4 flex items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
-                        <img 
-                          src={selectedTeams[0].away.logoUrl} 
-                          alt={selectedTeams[0].away.name} 
-                          className="w-12 h-12 object-contain"
-                        />
-                      </div>
-                      <span className="text-sm font-medium text-white">{selectedTeams[0].away.name}</span>
-                      <span className="text-xs text-blue-400 mt-1">Vendég</span>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-8">
-                    <div className="text-sm text-white mb-2">Tipp esélyek</div>
-                    <div className="flex gap-1 items-center mt-2">
-                      <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-500 rounded-full" style={{width: '42%'}}></div>
-                      </div>
-                      <span className="text-xs text-blue-400 min-w-[30px] text-right">42%</span>
-                    </div>
-                    <div className="flex gap-1 items-center mt-1.5">
-                      <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-gray-500 rounded-full" style={{width: '28%'}}></div>
-                      </div>
-                      <span className="text-xs text-gray-400 min-w-[30px] text-right">28%</span>
-                    </div>
-                    <div className="flex gap-1 items-center mt-1.5">
-                      <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-500 rounded-full" style={{width: '30%'}}></div>
-                      </div>
-                      <span className="text-xs text-blue-400 min-w-[30px] text-right">30%</span>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-2 mt-6">
-                    <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)]">
-                      Hazai
-                    </button>
-                    <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)]">
-                      Döntetlen
-                    </button>
-                    <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)]">
-                      Vendég
-                    </button>
-                  </div>
-                </div>
-              </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {selectedTeams
+                .filter(match => match.home && match.away)
+                .slice(0, 4)
+                .map((match, index) => (
+                  <PredictionResultCard key={index} match={match} />
+                ))}
             </div>
+            
+            {selectedTeams.filter(match => match.home && match.away).length > 4 && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                {selectedTeams
+                  .filter(match => match.home && match.away)
+                  .slice(4)
+                  .map((match, index) => (
+                    <PredictionResultCard key={index + 4} match={match} />
+                  ))}
+              </div>
+            )}
           </div>
         )}
       </div>
