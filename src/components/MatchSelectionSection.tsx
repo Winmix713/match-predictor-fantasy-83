@@ -22,7 +22,7 @@ const MatchSelectionSection = () => {
   
   // Update team selection
   const handleTeamSelect = (matchIndex: number, side: 'home' | 'away', teamId: string) => {
-    const team = teams.find(t => t.id === teamId) || null;
+    const team = teams.find(t => t.id.toString() === teamId) || null;
     
     setSelectedTeams(prev => {
       const updated = [...prev];
@@ -77,7 +77,7 @@ const MatchSelectionSection = () => {
               {/* Home Team Select */}
               <div className="mb-3">
                 <Select 
-                  value={match.home?.id || ""} 
+                  value={match.home?.id?.toString() || ""} 
                   onValueChange={(value) => handleTeamSelect(index, 'home', value)}
                 >
                   <SelectTrigger className="w-full bg-black/60 border-white/10 text-white">
@@ -85,7 +85,7 @@ const MatchSelectionSection = () => {
                   </SelectTrigger>
                   <SelectContent className="bg-gray-900 text-white border-white/10 max-h-[300px]">
                     {teams.map(team => (
-                      <SelectItem key={team.id} value={team.id}>
+                      <SelectItem key={team.id.toString()} value={team.id.toString()}>
                         <div className="flex items-center gap-2">
                           {team.logo && (
                             <img 
@@ -105,7 +105,7 @@ const MatchSelectionSection = () => {
               {/* Away Team Select */}
               <div className="mb-3">
                 <Select 
-                  value={match.away?.id || ""} 
+                  value={match.away?.id?.toString() || ""} 
                   onValueChange={(value) => handleTeamSelect(index, 'away', value)}
                 >
                   <SelectTrigger className="w-full bg-black/60 border-white/10 text-white">
@@ -113,7 +113,7 @@ const MatchSelectionSection = () => {
                   </SelectTrigger>
                   <SelectContent className="bg-gray-900 text-white border-white/10 max-h-[300px]">
                     {teams.map(team => (
-                      <SelectItem key={team.id} value={team.id}>
+                      <SelectItem key={team.id.toString()} value={team.id.toString()}>
                         <div className="flex items-center gap-2">
                           {team.logo && (
                             <img 
