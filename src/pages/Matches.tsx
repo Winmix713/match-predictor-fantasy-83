@@ -9,6 +9,7 @@ import LeagueEditor from "@/components/LeagueEditor";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import IntegrationCards from "@/components/dashboard/IntegrationCards";
 import ContentTabs from "@/components/dashboard/ContentTabs";
+import MatchSchedule from "@/components/MatchSchedule";
 
 const Matches = () => {
   const [activeTab, setActiveTab] = useState("matches");
@@ -75,6 +76,11 @@ const Matches = () => {
                   setActiveTab={setActiveTab}
                   isLoading={isLoading}
                 />
+              )}
+              
+              {/* Add the MatchSchedule component */}
+              {activeTab === "matches" && (
+                <MatchSchedule />
               )}
             </div>
           </>

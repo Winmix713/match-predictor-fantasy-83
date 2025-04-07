@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import AdvancedPattern from "./pages/AdvancedPattern";
 import Analysis from "./pages/Analysis";
 import League from "./pages/League";
+import Brandbook from "./components/Brandbook";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/advanced-pattern" element={<AdvancedPattern />} />
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/league" element={<League />} />
+          <Route path="/brandbook" element={<Brandbook />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
