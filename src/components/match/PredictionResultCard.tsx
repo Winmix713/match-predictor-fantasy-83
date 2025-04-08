@@ -53,7 +53,7 @@ const PredictionResultCard: React.FC<PredictionResultCardProps> = ({ match }) =>
                 />
               </div>
               <span className="text-sm font-medium text-white">{match.home.name}</span>
-              <span className="text-xs text-blue-400 mt-1">Otthon</span>
+              <span className="text-xs text-blue-400 mt-1">Hazai</span>
             </div>
             
             <div className="flex flex-col items-center mx-4">
@@ -128,7 +128,7 @@ const PredictionResultCard: React.FC<PredictionResultCardProps> = ({ match }) =>
                 <div className="p-4 bg-white/5 rounded-xl border border-white/5">
                   <h4 className="text-xs font-medium text-gray-400 mb-3 flex items-center gap-1">
                     <Percent className="h-3 w-3" />
-                    <span>További Statisztikák</span>
+                    <span>További statisztikák</span>
                   </h4>
                   
                   <div className="space-y-3">
