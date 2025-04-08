@@ -1,18 +1,32 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Team } from '../../data/premier-league-teams';
+import { ChevronDown, ChevronUp, Percent } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
 
 interface PredictionResultCardProps {
   match: { home: Team | null; away: Team | null };
 }
 
 const PredictionResultCard: React.FC<PredictionResultCardProps> = ({ match }) => {
+  const [expanded, setExpanded] = useState(false);
+  
   if (!match.home || !match.away) return null;
   
   // Generate some random stats for the teams
   const homeWinPercent = Math.round(Math.random() * 50) + 20;
   const drawPercent = Math.round(Math.random() * 30);
   const awayWinPercent = 100 - homeWinPercent - drawPercent;
+  
+  // Additional stats for the expanded view
+  const homeGoalChance = Math.round(Math.random() * 40) + 40;
+  const awayGoalChance = Math.round(Math.random() * 40) + 30;
+  const bothTeamsScoreChance = Math.round(Math.random() * 50) + 30;
+  const overUnderLine = 2.5;
+  const overChance = Math.round(Math.random() * 50) + 25;
+  const underChance = 100 - overChance;
+  
+  const toggleExpanded = () => setExpanded(!expanded);
   
   return (
     <div className="max-w-[500px] mx-auto my-6">
@@ -23,7 +37,9 @@ const PredictionResultCard: React.FC<PredictionResultCardProps> = ({ match }) =>
             <div className="bg-blue-500/20 backdrop-blur-md rounded-full px-3 py-1.5 border border-blue-400/20">
               <span className="text-xs font-medium text-blue-300">Élő mérkőzés</span>
             </div>
-            <div className="text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-full backdrop-blur-md border border-blue-400/10">21:00</div>
+            <Badge variant="outline" className="text-xs font-medium text-blue-400 bg-blue-500/10 border-blue-400/10">
+              21:00
+            </Badge>
           </div>
           
           {/* Teams */}
@@ -61,9 +77,28 @@ const PredictionResultCard: React.FC<PredictionResultCardProps> = ({ match }) =>
           {/* Prediction Stats */}
           <div className="mt-auto">
             <div className="mb-4">
-              <div className="text-xs text-gray-400 mb-2">Tipp esélyek</div>
+              <div className="flex justify-between items-center">
+                <div className="text-xs text-gray-400 mb-2">Tipp esélyek</div>
+                <button 
+                  onClick={toggleExpanded}
+                  className="text-xs text-gray-400 flex items-center gap-1 hover:text-blue-400 transition-colors"
+                >
+                  {expanded ? (
+                    <>
+                      <span>Kevesebb</span>
+                      <ChevronUp className="w-3 h-3" />
+                    </>
+                  ) : (
+                    <>
+                      <span>Részletek</span>
+                      <ChevronDown className="w-3 h-3" />
+                    </>
+                  )}
+                </button>
+              </div>
               
               <div className="flex gap-1 items-center">
+                <span className="text-xs text-white min-w-[60px]">{match.home.name}</span>
                 <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                   <div className="h-full bg-blue-500 rounded-full" style={{width: `${homeWinPercent}%`}}></div>
                 </div>
@@ -71,6 +106,7 @@ const PredictionResultCard: React.FC<PredictionResultCardProps> = ({ match }) =>
               </div>
               
               <div className="flex gap-1 items-center mt-1.5">
+                <span className="text-xs text-white min-w-[60px]">Döntetlen</span>
                 <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                   <div className="h-full bg-gray-500 rounded-full" style={{width: `${drawPercent}%`}}></div>
                 </div>
@@ -78,6 +114,7 @@ const PredictionResultCard: React.FC<PredictionResultCardProps> = ({ match }) =>
               </div>
               
               <div className="flex gap-1 items-center mt-1.5">
+                <span className="text-xs text-white min-w-[60px]">{match.away.name}</span>
                 <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                   <div className="h-full bg-blue-500 rounded-full" style={{width: `${awayWinPercent}%`}}></div>
                 </div>
@@ -85,16 +122,87 @@ const PredictionResultCard: React.FC<PredictionResultCardProps> = ({ match }) =>
               </div>
             </div>
             
+            {/* Expanded Stats */}
+            {expanded && (
+              <div className="mt-6 space-y-4 animate-fade-in" style={{animationDuration: '0.3s'}}>
+                <div className="p-4 bg-white/5 rounded-xl border border-white/5">
+                  <h4 className="text-xs font-medium text-gray-400 mb-3 flex items-center gap-1">
+                    <Percent className="h-3 w-3" />
+                    <span>További Statisztikák</span>
+                  </h4>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <div className="flex justify-between text-xs mb-1">
+                        <span className="text-white">Mindkét csapat gólt szerez</span>
+                        <span className="text-blue-400">{bothTeamsScoreChance}%</span>
+                      </div>
+                      <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
+                        <div className="h-full bg-emerald-500 rounded-full" style={{width: `${bothTeamsScoreChance}%`}}></div>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-white">{match.home.name} gólt szerez</span>
+                          <span className="text-blue-400">{homeGoalChance}%</span>
+                        </div>
+                        <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
+                          <div className="h-full bg-blue-500 rounded-full" style={{width: `${homeGoalChance}%`}}></div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-white">{match.away.name} gólt szerez</span>
+                          <span className="text-blue-400">{awayGoalChance}%</span>
+                        </div>
+                        <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
+                          <div className="h-full bg-blue-500 rounded-full" style={{width: `${awayGoalChance}%`}}></div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 pt-2">
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-white">Több mint {overUnderLine} gól</span>
+                          <span className="text-blue-400">{overChance}%</span>
+                        </div>
+                        <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
+                          <div className="h-full bg-amber-500 rounded-full" style={{width: `${overChance}%`}}></div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-white">Kevesebb mint {overUnderLine} gól</span>
+                          <span className="text-blue-400">{underChance}%</span>
+                        </div>
+                        <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
+                          <div className="h-full bg-amber-500 rounded-full" style={{width: `${underChance}%`}}></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             {/* Prediction Buttons */}
-            <div className="grid grid-cols-3 gap-2">
-              <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)]">
-                Hazai
+            <div className="grid grid-cols-3 gap-2 mt-4">
+              <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)] flex items-center justify-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                <span>Hazai</span>
               </button>
-              <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)]">
-                Döntetlen
+              <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)] flex items-center justify-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-gray-500"></span>
+                <span>Döntetlen</span>
               </button>
-              <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)]">
-                Vendég
+              <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)] flex items-center justify-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                <span>Vendég</span>
               </button>
             </div>
           </div>
