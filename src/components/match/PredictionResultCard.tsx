@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Team } from '../../data/premier-league-teams';
-import PredictionHeader from './prediction-card/PredictionHeader';
+import PredictionHeader from './PredictionHeader';
 import TeamsDisplay from './prediction-card/TeamsDisplay';
 import PredictionStats from './prediction-card/PredictionStats';
 import PredictionButtons from './prediction-card/PredictionButtons';
