@@ -1,15 +1,90 @@
+// src/types/match.ts (Example path - make sure this matches your actual structure)
 
-import { DataSource, PatternDefinition, PatternDetectionResult } from '../../types/match';
+export interface DataSourceConnection {
+  url?: string;
+  filename?: string;
+  host?: string;
+  database?: string;
+  // Add other connection types as needed
+}
+
+export interface DataSource {
+  id: string;
+  name: string;
+  type: 'api' | 'csv' | 'database' | 'manual' | string; // Allow custom string types
+  description?: string;
+  connection: DataSourceConnection | null;
+  lastSync?: string; // ISO Date string
+  status: 'active' | 'inactive' | 'error' | 'syncing' | string; // Allow custom statuses
+  matches?: number; // Make optional if not always available
+}
+
+export interface PatternCondition {
+  id: string; // Unique ID for the condition
+  field: string; // e.g., 'htHomeScore', 'ftAwayScore', 'matchTime'
+  operator: '=' | '!=' | '>' | '<' | '>=' | '<=' | 'contains' | 'startsWith' | 'endsWith' | string; // Allow custom operators
+  value: string | number; // Can be a literal value or reference another field (e.g., 'htAwayScore')
+  logicalOperator?: 'AND' | 'OR'; // Operator connecting this condition to the PREVIOUS one
+}
+
+export type PatternType = 'turnaround' | 'scoreline' | 'goals' | 'streak' | 'custom' | string;
+
+export interface PatternDefinition {
+  id: string;
+  name: string;
+  description: string;
+  type: PatternType;
+  conditions: PatternCondition[];
+  isActive: boolean;
+  createdAt?: string; // ISO Date string
+  lastUpdated?: string; // ISO Date string
+}
+
+export interface MatchPatternData {
+  // Example fields identified by the pattern
+  htHomeScore?: number;
+  htAwayScore?: number;
+  ftHomeScore?: number;
+  ftAwayScore?: number;
+  // Add other relevant fields identified for this specific match instance
+  [key: string]: any; // Allow other dynamic fields
+}
+
+export interface MatchedInstance {
+  matchId: number | string; // Unique ID of the match
+  homeTeam: string;
+  awayTeam: string;
+  date: string; // ISO Date string or other format
+  league?: string;
+  pattern: MatchPatternData; // Data specific to why this match matched
+  confidenceScore?: number; // Confidence for this specific instance (optional)
+}
+
+export interface PatternDetectionResult {
+  patternId: string; // ID linking back to PatternDefinition
+  patternName: string; // Denormalized name for convenience
+  matches: MatchedInstance[]; // List of matches where the pattern was detected
+  frequency?: number; // Overall frequency percentage (e.g., 24.6)
+  confidenceScore?: number; // Overall confidence score percentage (e.g., 81.5)
+  significance: 'high' | 'medium' | 'low' | string; // Significance level
+  insights?: string[]; // Textual insights derived from the analysis
+}
+
+// --- End of types/match.ts ---
+
+// src/mockData.ts (Keep your mock data file)
+import { DataSource, PatternDefinition, PatternDetectionResult } from './types/match'; // Adjust import path
 
 // Sample data sources
 export const dataSources: DataSource[] = [
-  {
+  // ... (keep your existing mock dataSources)
+    {
     id: '1',
     name: 'Premier League 2024-2025',
     type: 'api',
     description: 'API feed for the current Premier League season',
     connection: { url: 'https://api.example.com/v1/premier-league/2024-2025' },
-    lastSync: '2025-04-03T14:30:00',
+    lastSync: '2025-04-03T14:30:00Z',
     status: 'active',
     matches: 240
   },
@@ -19,113 +94,40 @@ export const dataSources: DataSource[] = [
     type: 'csv',
     description: 'Historical match data from previous 5 seasons',
     connection: { filename: 'historical_data.csv' },
-    lastSync: '2025-04-01T09:15:00',
+    lastSync: '2025-04-01T09:15:00Z',
     status: 'active',
     matches: 1200
   },
-  {
-    id: '3',
-    name: 'Betting Odds Database',
-    type: 'database',
-    description: 'SQL database with pre-match and in-play odds',
-    connection: { host: 'db.example.com', database: 'betting_odds' },
-    lastSync: '2025-04-04T08:00:00',
-    status: 'active',
-    matches: 960
-  },
-  {
-    id: '4',
-    name: 'Custom Observations',
-    type: 'manual',
-    description: 'Manually entered match observations',
-    connection: null,
-    lastSync: '2025-03-30T16:45:00',
-    status: 'active',
-    matches: 56
-  }
+   // ... more sources
 ];
 
 // Sample predefined patterns
 export const predefinedPatterns: PatternDefinition[] = [
-  {
+  // ... (keep your existing mock predefinedPatterns)
+   {
     id: 'p1',
     name: 'Draw to Away Win Turnaround',
     description: 'Matches where the result changes from a draw at half-time to an away win at full-time',
     type: 'turnaround',
     conditions: [
-      { id: 'c1', field: 'htHomeScore', operator: '=', value: 'htAwayScore' },
+      { id: 'c1', field: 'htHomeScore', operator: '=', value: 'htAwayScore' }, // No logical operator on first condition
       { id: 'c2', field: 'ftAwayScore', operator: '>', value: 'ftHomeScore', logicalOperator: 'AND' }
     ],
-    createdAt: '2025-03-20T10:00:00',
-    lastUpdated: '2025-04-01T14:30:00',
+    createdAt: '2025-03-20T10:00:00Z',
+    lastUpdated: '2025-04-01T14:30:00Z',
     isActive: true
   },
-  {
-    id: 'p2',
-    name: 'Home Team Comeback',
-    description: 'Home team trailing at half-time but wins at full-time',
-    type: 'turnaround',
-    conditions: [
-      { id: 'c3', field: 'htHomeScore', operator: '<', value: 'htAwayScore' },
-      { id: 'c4', field: 'ftHomeScore', operator: '>', value: 'ftAwayScore', logicalOperator: 'AND' }
-    ],
-    createdAt: '2025-03-22T11:15:00',
-    lastUpdated: '2025-03-22T11:15:00',
-    isActive: true
-  },
-  {
-    id: 'p3',
-    name: 'High-Scoring Second Half',
-    description: 'Matches with 3+ goals in the second half',
-    type: 'goals',
-    conditions: [
-      { 
-        id: 'c5', 
-        field: '(ftHomeScore - htHomeScore) + (ftAwayScore - htAwayScore)', 
-        operator: '>=', 
-        value: 3 
-      }
-    ],
-    createdAt: '2025-03-25T09:30:00',
-    lastUpdated: '2025-04-02T16:45:00',
-    isActive: true
-  }
+    // ... more patterns
 ];
 
 // Sample pattern detection results
 export const patternResults: PatternDetectionResult[] = [
+  // ... (keep your existing mock patternResults)
   {
     patternId: 'p1',
     patternName: 'Draw to Away Win Turnaround',
     matches: [
-      {
-        matchId: 123,
-        homeTeam: 'Nottingham',
-        awayTeam: 'Wolverhampton',
-        date: '2025-03-15',
-        league: 'Premier League',
-        pattern: {
-          htHomeScore: 0,
-          htAwayScore: 0,
-          ftHomeScore: 0,
-          ftAwayScore: 2
-        },
-        confidenceScore: 86
-      },
-      {
-        matchId: 456,
-        homeTeam: 'Brentford',
-        awayTeam: 'Brighton',
-        date: '2025-04-01',
-        league: 'Premier League',
-        pattern: {
-          htHomeScore: 0,
-          htAwayScore: 0,
-          ftHomeScore: 0,
-          ftAwayScore: 2
-        },
-        confidenceScore: 77
-      }
+        // ... match instances
     ],
     frequency: 24.6,
     confidenceScore: 81.5,
@@ -135,31 +137,5 @@ export const patternResults: PatternDetectionResult[] = [
       'The away teams in these matches typically have strong counterattacking ability'
     ]
   },
-  {
-    patternId: 'p2',
-    patternName: 'Home Team Comeback',
-    matches: [
-      {
-        matchId: 789,
-        homeTeam: 'Chelsea',
-        awayTeam: 'London Ágyúk',
-        date: '2025-03-20',
-        league: 'Premier League',
-        pattern: {
-          htHomeScore: 0,
-          htAwayScore: 1,
-          ftHomeScore: 2,
-          ftAwayScore: 1
-        },
-        confidenceScore: 74
-      }
-    ],
-    frequency: 18.2,
-    confidenceScore: 74,
-    significance: 'medium',
-    insights: [
-      'Home comebacks are more common in matches where the home team makes early substitutions',
-      'Teams with strong bench strength show this pattern more consistently'
-    ]
-  }
+   // ... more results
 ];
