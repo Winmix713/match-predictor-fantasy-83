@@ -1,7 +1,14 @@
 
-import { Match, TeamStanding, TeamForm } from "../types/league";
+import { Match, TeamStanding, TeamForm, LeagueConfiguration } from "../types/league";
 
-export const calculateStandings = (matches: Match[]): TeamStanding[] => {
+export const calculateStandings = (
+  matches: Match[], 
+  configuration?: LeagueConfiguration
+): TeamStanding[] => {
+  const pointsForWin = configuration?.pointsForWin ?? 3;
+  const pointsForDraw = configuration?.pointsForDraw ?? 1;
+  const pointsForLoss = configuration?.pointsForLoss ?? 0;
+  
   const standings: Record<string, TeamStanding> = {};
 
   matches.forEach(match => {
@@ -45,12 +52,13 @@ export const calculateStandings = (matches: Match[]): TeamStanding[] => {
     
     if (match.home_score > match.away_score) {
       homeTeam.won += 1;
-      homeTeam.points += 3;
+      homeTeam.points += pointsForWin;
     } else if (match.home_score === match.away_score) {
       homeTeam.drawn += 1;
-      homeTeam.points += 1;
+      homeTeam.points += pointsForDraw;
     } else {
       homeTeam.lost += 1;
+      homeTeam.points += pointsForLoss;
     }
     
     // Update away team stats
@@ -61,12 +69,13 @@ export const calculateStandings = (matches: Match[]): TeamStanding[] => {
     
     if (match.away_score > match.home_score) {
       awayTeam.won += 1;
-      awayTeam.points += 3;
+      awayTeam.points += pointsForWin;
     } else if (match.away_score === match.home_score) {
       awayTeam.drawn += 1;
-      awayTeam.points += 1;
+      awayTeam.points += pointsForDraw;
     } else {
       awayTeam.lost += 1;
+      awayTeam.points += pointsForLoss;
     }
   });
 
@@ -75,11 +84,29 @@ export const calculateStandings = (matches: Match[]): TeamStanding[] => {
     team.goalDifference = team.goalsFor - team.goalsAgainst;
   });
 
-  // Sort standings by points, then goal difference, then goals scored
+  // Sort standings based on configuration (tiebreakers)
+  const tiebreakers = configuration?.tiebreakers || ['goalDifference', 'goalsFor'];
+  
   return Object.values(standings).sort((a, b) => {
+    // First sort by points
     if (a.points !== b.points) return b.points - a.points;
-    if (a.goalDifference !== b.goalDifference) return b.goalDifference - a.goalDifference;
-    return b.goalsFor - a.goalsFor;
+    
+    // Then apply tiebreakers in order
+    for (const tiebreaker of tiebreakers) {
+      if (tiebreaker === 'goalDifference' && a.goalDifference !== b.goalDifference) {
+        return b.goalDifference - a.goalDifference;
+      }
+      
+      if (tiebreaker === 'goalsFor' && a.goalsFor !== b.goalsFor) {
+        return b.goalsFor - a.goalsFor;
+      }
+      
+      // Head-to-head tiebreaker would be more complex and require additional logic
+      // For simplicity, we're not implementing it fully here
+    }
+    
+    // If all tiebreakers are equal, sort alphabetically by team name
+    return a.team.localeCompare(b.team);
   });
 };
 

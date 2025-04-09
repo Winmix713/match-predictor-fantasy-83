@@ -15,6 +15,18 @@ export interface LeagueData {
   name: string;
   season: string;
   status?: 'completed' | 'in-progress';
+  configuration?: LeagueConfiguration;
+  teams?: string[];
+}
+
+export interface LeagueConfiguration {
+  pointsForWin: number;
+  pointsForDraw: number;
+  pointsForLoss: number;
+  matchesPerTeam?: number;
+  promotionSpots?: number;
+  relegationSpots?: number;
+  tiebreakers?: ('goalDifference' | 'goalsFor' | 'headToHead')[];
 }
 
 export interface TeamStanding {
@@ -34,4 +46,15 @@ export interface TeamForm {
   form: ('W' | 'D' | 'L')[];
   history: string;
   position: number;
+}
+
+export interface LeagueStats {
+  totalMatches: number;
+  totalGoals: number;
+  avgGoalsPerMatch: number;
+  mostGoalsTeam: string;
+  leastGoalsTeam: string;
+  homeWinPercentage: number;
+  awayWinPercentage: number;
+  drawPercentage: number;
 }

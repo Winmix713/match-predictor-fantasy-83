@@ -2,13 +2,17 @@
 import React from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Trophy } from 'lucide-react';
-import type { TeamStanding } from "../types/league";
+import type { TeamStanding, LeagueConfiguration } from "../types/league";
 
 interface StandingsTableProps {
   standings: TeamStanding[];
+  configuration?: LeagueConfiguration;
 }
 
-export const StandingsTable: React.FC<StandingsTableProps> = ({ standings }) => {
+export const StandingsTable: React.FC<StandingsTableProps> = ({ standings, configuration }) => {
+  const promotionSpots = configuration?.promotionSpots || 3;
+  const relegationSpots = configuration?.relegationSpots || 3;
+  
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
@@ -38,7 +42,8 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({ standings }) => 
                 <TableRow 
                   key={index} 
                   className={`border-b border-white/10 hover:bg-white/5 ${
-                    index < 4 ? 'bg-blue-500/10' : ''
+                    index < promotionSpots ? 'bg-blue-500/10' : 
+                    standings.length - index <= relegationSpots ? 'bg-red-500/10' : ''
                   }`}
                 >
                   <TableCell className="font-medium">
