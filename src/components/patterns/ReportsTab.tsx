@@ -1,37 +1,30 @@
-// src/components/Analysis/ReportsTab.tsx (or your chosen path)
+// src/components/Analysis/ReportsTab.tsx
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Download, FileText, CheckCircle, Bell, AlertTriangle } from 'lucide-react';
+import { Download, FileText, CheckCircle, Bell } from 'lucide-react';
 import { PatternDetectionResult, DataSource } from '../../types/match';
-import ActionItem from './ActionItem'; // Import the ActionItem component
+import ActionItem from '@/components/Analysis/ActionItem'; // ✅ FIXED: Corrected import path
 
 interface ReportsTabProps {
   patternResults: PatternDetectionResult[];
   dataSources: DataSource[];
   handleExportReport: () => void;
   handleRunAnalysis: () => void;
-  // Add more handlers for specific actions if needed
   handleSetupAlerts?: (patternId: string) => void;
   handleGenerateDetailedReport?: (patternId?: string) => void;
 }
 
-/**
- * Displays analysis reports, including summaries, key findings,
- * and suggested actions based on pattern detection results.
- */
 const ReportsTab: React.FC<ReportsTabProps> = ({
   patternResults,
   dataSources,
   handleExportReport,
   handleRunAnalysis,
-  handleSetupAlerts = () => alert("Placeholder: Setup Alerts"), // Default placeholder
-  handleGenerateDetailedReport = () => alert("Placeholder: Generate Report"), // Default placeholder
+  handleSetupAlerts = () => alert("Placeholder: Setup Alerts"),
+  handleGenerateDetailedReport = () => alert("Placeholder: Generate Report"),
 }) => {
   const totalMatches = dataSources.reduce((sum, source) => sum + (source.matches || 0), 0);
   const hasResults = patternResults.length > 0;
 
-  // Example: Define actions dynamically or statically
-  // Could be further enhanced to be generated based on results
   const actions = [
     {
       id: 'alerts',
@@ -39,8 +32,8 @@ const ReportsTab: React.FC<ReportsTabProps> = ({
       title: "Fordulat figyelő riasztások",
       description: "Állítson be automatikus értesítéseket a magas jelentőségű minták élő előfordulásakor.",
       buttonText: "Beállítás",
-      buttonAction: () => handleSetupAlerts('p1'), // Example: Pass a pattern ID or trigger generic setup
-      showCondition: hasResults, // Only show if there are results
+      buttonAction: () => handleSetupAlerts('p1'),
+      showCondition: hasResults,
     },
     {
       id: 'pdf',
@@ -48,12 +41,11 @@ const ReportsTab: React.FC<ReportsTabProps> = ({
       title: "Részletes jelentés létrehozása",
       description: "Készítsen PDF jelentést az összes feltárt mintáról és statisztikai elemzésükről.",
       buttonText: "Létrehozás",
-      buttonAction: () => handleGenerateDetailedReport(), // Example: Trigger PDF generation
+      buttonAction: () => handleGenerateDetailedReport(),
       showCondition: hasResults,
     },
   ];
 
-  // Sort results for display (e.g., by significance or confidence)
   const sortedResults = [...patternResults].sort((a, b) => {
     const significanceOrder = { high: 3, medium: 2, low: 1 };
     const sigDiff = (significanceOrder[b.significance] || 0) - (significanceOrder[a.significance] || 0);
@@ -81,7 +73,6 @@ const ReportsTab: React.FC<ReportsTabProps> = ({
       <div className="bg-gray-900/40 rounded-lg p-5 md:p-6 mb-6 border border-white/10 shadow-lg">
         {hasResults ? (
           <div className="space-y-8">
-            {/* Summary Section */}
             <div className="border-b border-white/10 pb-6">
               <h4 className="text-lg font-semibold text-white mb-3">Összefoglaló</h4>
               <p className="text-gray-300 text-sm">
@@ -90,12 +81,11 @@ const ReportsTab: React.FC<ReportsTabProps> = ({
               </p>
             </div>
 
-            {/* Key Findings Section */}
             <div className="border-b border-white/10 pb-6">
               <h4 className="text-lg font-semibold text-white mb-4">Kiemelt megállapítások</h4>
               {sortedResults.length > 0 ? (
-                 <ul className="space-y-3">
-                  {sortedResults.slice(0, 3).map((result) => ( // Show top 3 findings
+                <ul className="space-y-3">
+                  {sortedResults.slice(0, 3).map((result) => (
                     <li key={result.patternId} className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-emerald-400 mt-0.5 flex-shrink-0" />
                       <div>
@@ -103,18 +93,17 @@ const ReportsTab: React.FC<ReportsTabProps> = ({
                         <span className="text-gray-300 text-sm block">
                           {result.frequency !== undefined && ` Előfordulás: ~${result.frequency.toFixed(1)}%.`}
                           {result.confidenceScore !== undefined && ` Megbízhatóság: ${result.confidenceScore.toFixed(1)}%.`}
-                          {result.insights && result.insights.length > 0 && ` (${result.insights[0]})`} {/* Display first insight */}
+                          {result.insights && result.insights.length > 0 && ` (${result.insights[0]})`}
                         </span>
                       </div>
                     </li>
                   ))}
                 </ul>
-               ) : (
-                 <p className="text-gray-400 text-sm">Nem található kiemelhető megállapítás.</p>
-               )}
+              ) : (
+                <p className="text-gray-400 text-sm">Nem található kiemelhető megállapítás.</p>
+              )}
             </div>
 
-            {/* Suggested Actions Section */}
             <div>
               <h4 className="text-lg font-semibold text-white mb-4">Javasolt intézkedések</h4>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -127,7 +116,6 @@ const ReportsTab: React.FC<ReportsTabProps> = ({
             </div>
           </div>
         ) : (
-          // Empty State
           <div className="text-center py-12">
             <div className="w-16 h-16 rounded-full bg-blue-500/10 mx-auto flex items-center justify-center mb-5 border border-blue-500/20">
               <FileText className="h-8 w-8 text-blue-400" />
