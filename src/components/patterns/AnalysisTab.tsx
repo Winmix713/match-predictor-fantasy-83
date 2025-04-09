@@ -1,184 +1,276 @@
-
+// src/components/Analysis/AnalysisTab.tsx (or your chosen path)
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Download, LineChart, BarChart4, Filter, PieChart } from 'lucide-react';
-import { DataSource, PatternDefinition, PatternDetectionResult } from '../../types/match';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"; // Use Card component
+import { Download, LineChart, BarChart4, Filter, PieChart, Settings2, Percent, CheckCircle, AlertTriangle } from 'lucide-react';
+import { DataSource, PatternDefinition, PatternDetectionResult } from '../../types/match'; // Assuming types are in ../../types
 
 interface AnalysisTabProps {
   dataSources: DataSource[];
-  predefinedPatterns: PatternDefinition[];
-  patternResults: PatternDetectionResult[];
+  predefinedPatterns: PatternDefinition[]; // Patterns selected/available for analysis
+  patternResults: PatternDetectionResult[]; // Results from the LAST analysis run
+  analysisInProgress: boolean; // Flag indicating if analysis is running
   handleRunAnalysis: () => void;
   handleExportReport: () => void;
+  handleConfigureAnalysis?: () => void; // Optional: For opening detailed settings modal
+  handleViewResultDetails?: (result: PatternDetectionResult) => void; // Optional: For viewing details of a specific result
 }
 
-const AnalysisTab: React.FC<AnalysisTabProps> = ({ 
-  dataSources, 
-  predefinedPatterns, 
+// Helper function for significance badge styling
+const getSignificanceBadgeInfo = (significance: string): { variant: "success" | "warning" | "secondary" | "outline", label: string } => {
+  switch (significance?.toLowerCase()) {
+    case 'high': return { variant: 'success', label: 'Magas' };
+    case 'medium': return { variant: 'warning', label: 'Közepes' };
+    case 'low': return { variant: 'secondary', label: 'Alacsony' };
+    default: return { variant: 'outline', label: significance || 'N/A' };
+  }
+};
+
+/**
+ * Tab for configuring, running, and viewing pattern analysis results.
+ */
+const AnalysisTab: React.FC<AnalysisTabProps> = ({
+  dataSources,
+  predefinedPatterns,
   patternResults,
+  analysisInProgress,
   handleRunAnalysis,
-  handleExportReport
+  handleExportReport,
+  handleConfigureAnalysis,
+  handleViewResultDetails,
 }) => {
-  const getSignificanceBadge = (significance: string) => {
-    switch (significance) {
-      case 'high':
-        return <Badge className="bg-emerald-500">Magas jelentőség</Badge>;
-      case 'medium':
-        return <Badge className="bg-amber-500">Közepes jelentőség</Badge>;
-      case 'low':
-        return <Badge className="bg-gray-500">Alacsony jelentőség</Badge>;
-      default:
-        return <Badge className="bg-gray-500">{significance}</Badge>;
-    }
+  const hasResults = patternResults && patternResults.length > 0;
+  const hasConfig = dataSources.length > 0 && predefinedPatterns.length > 0;
+
+  // Example hardcoded settings - replace with dynamic values if needed
+  const analysisSettings = {
+      confidenceThreshold: 75,
+      minMatchCount: 10,
   };
-  
+
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-medium text-white">Minta Elemzés</h3>
-        <div className="flex gap-2">
-          <Button 
-            className="bg-blue-600 hover:bg-blue-700 flex items-center gap-1"
+      {/* Header and Actions */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
+        <h3 className="text-xl font-semibold text-white">Minta Elemzés és Eredmények</h3>
+        <div className="flex flex-wrap gap-2">
+          {/* Conditionally show Configure button */}
+          {handleConfigureAnalysis && (
+             <Button
+                variant="outline"
+                className="bg-gray-500/10 border-gray-500/30 hover:bg-gray-500/20 text-white flex items-center gap-2"
+                onClick={handleConfigureAnalysis}
+            >
+                <Settings2 className="h-4 w-4" />
+                <span>Beállítások</span>
+            </Button>
+          )}
+          <Button
+            className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
             onClick={handleRunAnalysis}
+            disabled={analysisInProgress || !hasConfig}
+            aria-label={analysisInProgress ? "Elemzés folyamatban..." : "Elemzés indítása"}
           >
-            <LineChart className="h-4 w-4" />
-            <span>Elemzés indítása</span>
+            {analysisInProgress ? (
+              <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
+            ) : (
+              <LineChart className="h-4 w-4" />
+            )}
+            <span>{analysisInProgress ? 'Elemzés folyamatban...' : 'Elemzés Indítása'}</span>
           </Button>
         </div>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-gray-900/40 rounded-lg p-4 border border-white/5">
-          <h4 className="text-white font-medium mb-2 flex items-center gap-2">
-            <Filter className="h-4 w-4 text-blue-400" />
-            Elemzési beállítások
-          </h4>
-          
-          <div className="space-y-3">
+
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+
+        {/* Settings Overview Card */}
+        <Card className="bg-gray-900/50 border-white/10 text-white lg:col-span-1 shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Filter className="h-5 w-5 text-blue-400" />
+              Aktuális Elemzési Konfiguráció
+            </CardTitle>
+             {/* Optionally add configure button here too */}
+             {/* {handleConfigureAnalysis && <Button size="sm" variant="ghost" onClick={handleConfigureAnalysis} className="absolute top-4 right-4">Módosítás</Button>} */}
+          </CardHeader>
+          <CardContent className="space-y-5 text-sm">
             <div className="space-y-2">
-              <label className="text-xs text-gray-400">Adatforrások</label>
-              <div className="flex flex-wrap gap-1">
-                {dataSources.map(source => (
-                  <Badge key={source.id} className="bg-blue-500/20 text-blue-400">
-                    {source.name}
-                  </Badge>
-                ))}
+              <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Adatforrások</label>
+              {dataSources.length > 0 ? (
+                <div className="flex flex-wrap gap-1">
+                    {dataSources.map(source => (
+                    <Badge key={source.id} variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30">
+                        {source.name}
+                    </Badge>
+                    ))}
+                </div>
+               ) : ( <p className="text-gray-500 italic">Nincs kiválasztott adatforrás.</p> )}
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Elemzendő Minták</label>
+              {predefinedPatterns.length > 0 ? (
+                 <div className="flex flex-wrap gap-1">
+                    {predefinedPatterns.map(pattern => (
+                    <Badge key={pattern.id} variant="secondary" className="bg-purple-500/20 text-purple-300 border-purple-500/30">
+                        {pattern.name}
+                    </Badge>
+                    ))}
+                 </div>
+                ) : ( <p className="text-gray-500 italic">Nincs kiválasztott minta.</p> )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 pt-2">
+                 <div className="space-y-1">
+                     <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Konfidencia Küszöb</label>
+                     <div className="font-semibold text-base text-white">{analysisSettings.confidenceThreshold}%</div>
+                 </div>
+                 <div className="space-y-1">
+                    <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Min. Mérkőzés Szám</label>
+                    <div className="font-semibold text-base text-white">{analysisSettings.minMatchCount}</div>
+                 </div>
+            </div>
+
+            {!hasConfig && (
+                 <div className="pt-2 text-center text-amber-400/80 text-xs flex items-center gap-2 bg-amber-900/20 p-2 rounded border border-amber-500/20">
+                     <AlertTriangle className="h-4 w-4 flex-shrink-0"/>
+                     Az elemzés indításához válasszon ki legalább egy adatforrást és egy mintát.
+                 </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Analysis Results Card */}
+        <Card className="bg-gray-900/50 border-white/10 text-white lg:col-span-2 shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <BarChart4 className="h-5 w-5 text-emerald-400" />
+              Legutóbbi Elemzés Eredményei
+            </CardTitle>
+             {hasResults && <CardDescription className="text-gray-400">A legutóbbi elemzés futtatásának eredményei.</CardDescription>}
+          </CardHeader>
+          <CardContent>
+            {hasResults ? (
+              <div className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {patternResults.map(result => {
+                     const significanceInfo = getSignificanceBadgeInfo(result.significance);
+                     return (
+                        <div key={result.patternId} className="bg-black/30 p-4 rounded-lg border border-white/10 space-y-3 transform transition-transform hover:scale-[1.02] hover:shadow-md">
+                            <div className="flex justify-between items-start gap-2">
+                            <h5 className="text-base font-semibold text-white leading-tight">{result.patternName}</h5>
+                            <Badge variant={significanceInfo.variant} className="text-xs capitalize flex-shrink-0">
+                                {significanceInfo.label} Jelentőség
+                            </Badge>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3 text-center border-t border-b border-white/5 py-3">
+                            <div>
+                                <div className="text-xs text-gray-400 mb-1">Megbízhatóság</div>
+                                <div className="text-xl font-bold text-emerald-400 flex items-center justify-center gap-1">
+                                     <Percent className="h-4 w-4" /> {(result.confidenceScore ?? 0).toFixed(1)}%
+                                </div>
+                            </div>
+                            <div>
+                                <div className="text-xs text-gray-400 mb-1">Gyakoriság</div>
+                                <div className="text-xl font-bold text-blue-400 flex items-center justify-center gap-1">
+                                    <BarChart4 className="h-4 w-4"/> {(result.frequency ?? 0).toFixed(1)}%
+                                </div>
+                            </div>
+                            </div>
+
+                            <div className="text-xs text-gray-400 mb-1">Megfigyelt esetek</div>
+                            <div className="text-sm font-medium text-white">{result.matches?.length ?? 0} mérkőzés</div>
+
+                            {handleViewResultDetails && (
+                                <Button
+                                    variant="link"
+                                    size="sm"
+                                    className="w-full mt-2 text-blue-400 hover:text-blue-300 px-0 justify-start"
+                                    onClick={() => handleViewResultDetails(result)}
+                                >
+                                Részletes eredmények megtekintése <ArrowRight className="h-3 w-3 ml-1"/>
+                                </Button>
+                             )}
+                        </div>
+                     );
+                    })}
+                </div>
+
+                {/* Export Button within results */}
+                <Button
+                  variant="outline"
+                  className="w-full bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20 text-white flex items-center gap-2 mt-4"
+                  onClick={handleExportReport}
+                  disabled={analysisInProgress}
+                >
+                  <Download className="h-4 w-4" />
+                  <span>Eredmények Exportálása</span>
+                </Button>
               </div>
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-xs text-gray-400">Elemzendő minták</label>
-              <div className="flex flex-wrap gap-1">
-                {predefinedPatterns.map(pattern => (
-                  <Badge key={pattern.id} className="bg-purple-500/20 text-purple-400">
-                    {pattern.name}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-xs text-gray-400">Statisztikai konfidencia minimum</label>
-              <div className="font-medium text-white">75%</div>
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-xs text-gray-400">Minimum mérkőzés szám</label>
-              <div className="font-medium text-white">10</div>
-            </div>
-            
-            <Button variant="outline" size="sm" className="w-full mt-2 bg-black/20 border-white/10">
-              Beállítások módosítása
-            </Button>
-          </div>
-        </div>
-        
-        <div className="bg-gray-900/40 rounded-lg p-4 border border-white/5 md:col-span-2">
-          <h4 className="text-white font-medium mb-3 flex items-center gap-2">
-            <BarChart4 className="h-4 w-4 text-blue-400" />
-            Elemzési eredmények
-          </h4>
-          
-          {patternResults.length > 0 ? (
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {patternResults.map(result => (
-                  <div key={result.patternId} className="bg-black/20 p-3 rounded-md border border-white/5">
-                    <div className="flex justify-between items-start mb-2">
-                      <h5 className="text-white font-medium">{result.patternName}</h5>
-                      {getSignificanceBadge(result.significance)}
+            ) : (
+              // Empty State for Results
+              <div className="text-center py-10 px-4">
+                {analysisInProgress ? (
+                    <>
+                     <div className="w-16 h-16 rounded-full bg-blue-500/10 mx-auto flex items-center justify-center mb-5 border border-blue-500/20">
+                        <span className="animate-spin h-8 w-8 border-4 border-blue-400 border-t-transparent rounded-full"></span>
+                     </div>
+                     <h5 className="text-lg font-semibold text-white mb-2">Elemzés folyamatban...</h5>
+                     <p className="text-gray-400 text-sm mb-6 max-w-md mx-auto">
+                        A rendszer dolgozik a minták felismerésén. Az eredmények hamarosan megjelennek.
+                     </p>
+                    </>
+                ) : (
+                    <>
+                    <div className="w-16 h-16 rounded-full bg-gray-500/10 mx-auto flex items-center justify-center mb-5 border border-gray-500/20">
+                        <LineChart className="h-8 w-8 text-gray-400" />
                     </div>
-                    
-                    <div className="grid grid-cols-2 gap-2 mb-2">
-                      <div>
-                        <div className="text-xs text-gray-400">Megbízhatóság</div>
-                        <div className="text-lg font-bold text-emerald-400">{result.confidenceScore}%</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-gray-400">Gyakoriság</div>
-                        <div className="text-lg font-bold text-blue-400">{result.frequency}%</div>
-                      </div>
-                    </div>
-                    
-                    <div className="text-xs text-gray-400 mb-1">Megfigyelt esetek</div>
-                    <div className="text-sm font-medium text-white">{result.matches.length} mérkőzés</div>
-                    
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="w-full mt-2 text-blue-400 hover:text-blue-300 hover:bg-blue-950/20"
+                    <h5 className="text-lg font-semibold text-white mb-2">Nincsenek megjeleníthető eredmények</h5>
+                    <p className="text-gray-400 text-sm mb-6 max-w-md mx-auto">
+                        Indítson el egy új elemzést a fent megadott konfigurációval az eredmények megtekintéséhez.
+                    </p>
+                    <Button
+                        size="lg"
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                        onClick={handleRunAnalysis}
+                        disabled={!hasConfig} // Disable if no config
                     >
-                      Részletek megtekintése
+                        Elemzés Indítása Most
                     </Button>
-                  </div>
-                ))}
+                    </>
+                )}
+
               </div>
-              
-              <Button 
-                variant="outline" 
-                className="w-full bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20"
-                onClick={handleExportReport}
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Elemzési jelentés exportálása
-              </Button>
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <div className="w-12 h-12 rounded-full bg-blue-500/10 mx-auto flex items-center justify-center mb-4">
-                <LineChart className="h-6 w-6 text-blue-400" />
-              </div>
-              <h5 className="text-white font-medium mb-2">Még nincs elemzési eredmény</h5>
-              <p className="text-gray-400 text-sm mb-4">Indítson el egy új elemzést a minták alapján</p>
-              <Button 
-                size="sm" 
-                className="bg-blue-600 hover:bg-blue-700"
-                onClick={handleRunAnalysis}
-              >
-                Elemzés indítása
-              </Button>
-            </div>
-          )}
-        </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
-      
-      {/* Additional visualizations for analysis results */}
-      <div className="bg-gray-900/40 rounded-lg p-4 mb-6 border border-white/5">
-        <h4 className="text-white font-medium mb-4 flex items-center gap-2">
-          <PieChart className="h-4 w-4 text-blue-400" />
-          Mintaeloszlás vizualizáció
-        </h4>
-        
-        <div className="h-64 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-blue-500/10 mx-auto flex items-center justify-center mb-4">
-              <BarChart4 className="h-6 w-6 text-blue-400" />
-            </div>
-            <p className="text-gray-400">Diagramok az elemzés futtatása után jelennek meg</p>
-          </div>
-        </div>
-      </div>
+
+      {/* Placeholder for Additional Visualizations */}
+      {hasResults && (
+        <Card className="bg-gray-900/50 border-white/10 text-white shadow-lg">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                    <PieChart className="h-5 w-5 text-purple-400" />
+                    Eredmények Vizualizációja
+                </CardTitle>
+                 <CardDescription className="text-gray-400">Mintaeloszlás és egyéb diagramok (Hamarosan).</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="h-64 flex items-center justify-center border border-dashed border-white/10 rounded-md bg-black/20">
+                    <div className="text-center">
+                        <div className="w-12 h-12 rounded-full bg-purple-500/10 mx-auto flex items-center justify-center mb-4">
+                        <BarChart4 className="h-6 w-6 text-purple-400" />
+                        </div>
+                        <p className="text-gray-500 text-sm">Diagramok fejlesztés alatt.</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+       )}
     </>
   );
 };
