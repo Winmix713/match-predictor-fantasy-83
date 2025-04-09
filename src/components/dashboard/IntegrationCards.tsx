@@ -1,6 +1,8 @@
+// src/components/dashboard/IntegrationCard.tsx
+
 import React from 'react';
-import { Link } from 'react-router-dom'; // Assuming you use react-router-dom
-import { cn } from "@/lib/utils"; // Standard utility for combining class names in shadcn/ui projects
+import { Link } from 'react-router-dom'; // Make sure react-router-dom is installed
+import { cn } from "@/lib/utils"; // Assumes you have this utility from shadcn/ui setup
 
 // Define the expected props for the component
 interface IntegrationCardProps {
@@ -12,7 +14,6 @@ interface IntegrationCardProps {
 }
 
 // Define Tailwind classes for different color themes
-// You can customize these colors and add more themes
 const colorVariants = {
   blue: {
     bg: "bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50",
@@ -30,7 +31,7 @@ const colorVariants = {
     titleText: "text-emerald-900 dark:text-emerald-100",
     descriptionText: "text-emerald-700 dark:text-emerald-300",
   },
-  purple: { // Added purple example based on your commented data
+  purple: {
     bg: "bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/30 dark:hover:bg-purple-900/50",
     border: "border-purple-200 hover:border-purple-300 dark:border-purple-800 dark:hover:border-purple-700",
     iconBg: "bg-purple-100 dark:bg-purple-900",
@@ -38,7 +39,6 @@ const colorVariants = {
     titleText: "text-purple-900 dark:text-purple-100",
     descriptionText: "text-purple-700 dark:text-purple-300",
   },
-  // Add more color variants as needed
   default: { // Fallback colors
     bg: "bg-gray-50 hover:bg-gray-100 dark:bg-gray-900/30 dark:hover:bg-gray-900/50",
     border: "border-gray-200 hover:border-gray-300 dark:border-gray-800 dark:hover:border-gray-700",
@@ -90,4 +90,4 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({
   );
 };
 
-export default IntegrationCard;
+export default IntegrationCard; // Default export is needed here
