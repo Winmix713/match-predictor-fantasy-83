@@ -17,30 +17,22 @@ interface PatternsTabProps {
   patterns: PatternDefinition[];
   isMobile: boolean;
   // Handler to trigger a general analysis (might use selected patterns)
-  handleRunGeneralAnalysis: () => void;
+  handleRunGeneralAnalysis?: () => void;
+  // Modified to match what AdvancedPatternAnalysis passes
+  handleRunAnalysis?: () => void;
+  isLoading?: boolean;
   // Handler to add a new pattern
-  handleAddPattern: (newPatternData: Omit<PatternDefinition, 'id' | 'createdAt' | 'lastUpdated'>) => Promise<void>; // Make async for potential API call
+  handleAddPattern?: (newPatternData: Omit<PatternDefinition, 'id' | 'createdAt' | 'lastUpdated'>) => Promise<void>; // Make async for potential API call
   // Handler to update an existing pattern (Optional)
   handleUpdatePattern?: (updatedPatternData: PatternDefinition) => Promise<void>;
   // Handler to delete a pattern (Optional)
   handleDeletePattern?: (patternId: string) => Promise<void>;
 }
 
-// Define pattern types for selection
-const PATTERN_TYPES = ['turnaround', 'scoreline', 'goals', 'streak', 'custom'] as const;
+// Define pattern types for selection - removed 'streak' to match the type definition
+const PATTERN_TYPES = ['turnaround', 'scoreline', 'goals', 'custom'] as const;
 type PatternTypeTuple = typeof PATTERN_TYPES;
 type PatternType = PatternTypeTuple[number];
-
-const getPatternTypeInfo = (type: PatternType | string): { label: string, badgeClass: string } => {
-     switch (type) {
-        case 'turnaround': return { label: 'Fordulat', badgeClass: 'bg-purple-500/80 hover:bg-purple-500/90' };
-        case 'scoreline': return { label: 'Eredmény', badgeClass: 'bg-blue-500/80 hover:bg-blue-500/90' };
-        case 'goals': return { label: 'Gólok', badgeClass: 'bg-emerald-500/80 hover:bg-emerald-500/90' };
-        case 'streak': return { label: 'Sorozat', badgeClass: 'bg-yellow-500/80 hover:bg-yellow-500/90' };
-        case 'custom': return { label: 'Egyedi', badgeClass: 'bg-gray-500/80 hover:bg-gray-500/90' };
-        default: return { label: type || 'Ismeretlen', badgeClass: 'bg-gray-500/80 hover:bg-gray-500/90' };
-    }
-};
 
 // Initial state for a new pattern condition
 const initialCondition: Omit<PatternCondition, 'id'> = {
@@ -54,9 +46,10 @@ const PatternsTab: React.FC<PatternsTabProps> = ({
   patterns,
   isMobile,
   handleRunGeneralAnalysis,
-  handleAddPattern,
-  // handleUpdatePattern, // Add if needed
-  // handleDeletePattern // Add if needed
+  handleRunAnalysis, // Adding this prop
+  handleAddPattern = async () => { toast.error("Add pattern functionality not implemented"); },
+  // Use either handleRunGeneralAnalysis or handleRunAnalysis based on availability
+  isLoading = false
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateModifyOpen, setIsCreateModifyOpen] = useState(false);
@@ -219,7 +212,7 @@ const PatternsTab: React.FC<PatternsTabProps> = ({
                       </TableCell>
                       <TableCell className="text-center py-3">
                         {pattern.isActive ?
-                          <Badge variant="success" className="flex items-center justify-center w-fit mx-auto">
+                          <Badge variant="default" className="flex items-center justify-center w-fit mx-auto bg-green-600 hover:bg-green-700">
                             <Check className="h-3 w-3 mr-1" /> Aktív
                           </Badge> :
                           <Badge variant="secondary" className="flex items-center justify-center w-fit mx-auto">

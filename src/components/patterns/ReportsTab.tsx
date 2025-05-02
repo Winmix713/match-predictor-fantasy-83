@@ -1,3 +1,4 @@
+
 // src/components/Analysis/ReportsTab.tsx
 import React from 'react';
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ interface ReportsTabProps {
   dataSources: DataSource[];
   handleExportReport: () => void;
   handleRunAnalysis: () => void;
+  isLoading?: boolean; // Added to match the props passed in AdvancedPatternAnalysis
   handleSetupAlerts?: (patternId: string) => void;
   handleGenerateDetailedReport?: (patternId?: string) => void;
 }
@@ -19,6 +21,7 @@ const ReportsTab: React.FC<ReportsTabProps> = ({
   dataSources,
   handleExportReport,
   handleRunAnalysis,
+  isLoading = false,
   handleSetupAlerts = () => alert("Placeholder: Setup Alerts"),
   handleGenerateDetailedReport = () => alert("Placeholder: Generate Report"),
 }) => {
@@ -128,8 +131,9 @@ const ReportsTab: React.FC<ReportsTabProps> = ({
               size="lg"
               className="bg-blue-600 hover:bg-blue-700 text-white"
               onClick={handleRunAnalysis}
+              disabled={isLoading}
             >
-              Elemzés indítása most
+              {isLoading ? "Elemzés folyamatban..." : "Elemzés indítása most"}
             </Button>
           </div>
         )}

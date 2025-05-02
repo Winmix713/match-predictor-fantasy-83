@@ -65,8 +65,14 @@ const Matches = () => {
                 actionButton={seasonSelector}
               />
               
-              {/* Integration Navigation Cards */}
-              <IntegrationCards />
+              {/* Integration Navigation Cards - Pass required props */}
+              <IntegrationCards 
+                icon="chart"
+                title="Integration Cards" 
+                description="Cards for navigation between integrations"
+                linkTo="/analytics" 
+                color="blue" 
+              />
               
               {activeTab === "league-list" ? (
                 <LeagueSeasons onEdit={() => setIsEditing(true)} />

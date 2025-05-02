@@ -1,3 +1,4 @@
+
 // src/components/Patterns/PatternDetailsContent.tsx (or your chosen path)
 import React from 'react';
 import { Badge } from "@/components/ui/badge";
@@ -44,7 +45,7 @@ const PatternDetailsContent: React.FC<PatternDetailsContentProps> = ({ pattern }
        <div>
           <h4 className="text-sm font-medium text-gray-400 mb-2">Állapot</h4>
           {pattern.isActive ? (
-              <Badge variant="success" className="flex items-center w-fit">
+              <Badge variant="default" className="flex items-center w-fit bg-green-600 hover:bg-green-700">
                   <Check className="h-3 w-3 mr-1" /> Aktív
               </Badge>
           ) : (

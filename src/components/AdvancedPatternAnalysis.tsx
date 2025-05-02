@@ -138,6 +138,13 @@ const AdvancedPatternAnalysis: React.FC = () => {
     toast.info(`Configure data source ${id} - feature coming soon`);
   }, []);
 
+  const handleAddPattern = useCallback(async (newPatternData: Omit<PatternDefinition, 'id' | 'createdAt' | 'lastUpdated'>) => {
+    // Implement pattern creation logic here
+    console.log("New pattern data:", newPatternData);
+    await simulateAsyncTask(1500);
+    toast.success("Pattern created successfully");
+  }, []);
+
   // --- Render ---
   return (
     <div className="space-y-6 p-4 md:p-6 bg-gray-900 text-gray-100 rounded-lg shadow-xl">
@@ -194,6 +201,7 @@ const AdvancedPatternAnalysis: React.FC = () => {
               isMobile={isMobile}
               handleRunAnalysis={handleRunAnalysis}
               isLoading={isLoading}
+              handleAddPattern={handleAddPattern}
             />
           </TabsContent>
 
