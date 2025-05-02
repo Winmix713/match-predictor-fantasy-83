@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+// Remove framer-motion import as it's not available
 import { Trophy, Database, BarChart4, PieChart, Dribbble } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Header from '@/components/Header';

@@ -1,16 +1,17 @@
+
 // src/components/Analysis/AnalysisTab.tsx (or your chosen path)
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"; // Use Card component
-import { Download, LineChart, BarChart4, Filter, PieChart, Settings2, Percent, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Download, LineChart, BarChart4, Filter, PieChart, Settings2, Percent, CheckCircle, AlertTriangle, ArrowRight } from 'lucide-react';
 import { DataSource, PatternDefinition, PatternDetectionResult } from '../../types/match'; // Assuming types are in ../../types
 
 interface AnalysisTabProps {
   dataSources: DataSource[];
   predefinedPatterns: PatternDefinition[]; // Patterns selected/available for analysis
   patternResults: PatternDetectionResult[]; // Results from the LAST analysis run
-  analysisInProgress: boolean; // Flag indicating if analysis is running
+  analysisInProgress?: boolean; // Flag indicating if analysis is running
   handleRunAnalysis: () => void;
   handleExportReport: () => void;
   handleConfigureAnalysis?: () => void; // Optional: For opening detailed settings modal
@@ -18,11 +19,11 @@ interface AnalysisTabProps {
 }
 
 // Helper function for significance badge styling
-const getSignificanceBadgeInfo = (significance: string): { variant: "success" | "warning" | "secondary" | "outline", label: string } => {
+const getSignificanceBadgeInfo = (significance: string): { variant: "default" | "secondary" | "outline" | "destructive", label: string } => {
   switch (significance?.toLowerCase()) {
-    case 'high': return { variant: 'success', label: 'Magas' };
-    case 'medium': return { variant: 'warning', label: 'Közepes' };
-    case 'low': return { variant: 'secondary', label: 'Alacsony' };
+    case 'high': return { variant: 'default', label: 'Magas' };
+    case 'medium': return { variant: 'secondary', label: 'Közepes' };
+    case 'low': return { variant: 'outline', label: 'Alacsony' };
     default: return { variant: 'outline', label: significance || 'N/A' };
   }
 };
@@ -34,7 +35,7 @@ const AnalysisTab: React.FC<AnalysisTabProps> = ({
   dataSources,
   predefinedPatterns,
   patternResults,
-  analysisInProgress,
+  analysisInProgress = false,
   handleRunAnalysis,
   handleExportReport,
   handleConfigureAnalysis,

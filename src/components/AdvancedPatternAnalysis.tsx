@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { Database } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -10,38 +11,20 @@ import PatternsTab from './patterns/PatternsTab';
 import AnalysisTab from './patterns/AnalysisTab';
 import ReportsTab from './patterns/ReportsTab';
 
+// Import types from match.ts
+import { 
+  DataSource,
+  PatternDefinition,
+  PatternDetectionResult
+} from '../types/match';
+
 // --- Mock Data & Types (assuming structure from original props) ---
-// It's better to define types/interfaces for your data
-interface DataSource {
-  id: string;
-  name: string;
-  type: string;
-  status: 'connected' | 'disconnected' | 'error';
-  lastImport?: string;
-}
-
-interface Pattern {
-  id: string;
-  name: string;
-  description: string;
-  complexity: 'low' | 'medium' | 'high';
-  tags: string[];
-}
-
-interface PatternResult {
-  id: string;
-  patternId: string;
-  patternName?: string; // Denormalized for easier display
-  dataSourceId: string;
-  dataSourceName?: string; // Denormalized
-  runDate: string;
-  status: 'completed' | 'failed' | 'running';
-  findingsCount: number;
-  // Add more result-specific fields as needed
-}
-
-// Mock data imports (replace with actual data fetching logic)
-import { dataSources, predefinedPatterns, patternResults } from './patterns/mockData';
+// We'll properly type the imported data
+import { 
+  dataSources as mockDataSources, 
+  predefinedPatterns as mockPredefinedPatterns, 
+  patternResults as mockPatternResults 
+} from './patterns/mockData';
 
 // --- Helper Functions ---
 
@@ -57,6 +40,11 @@ const AdvancedPatternAnalysis: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  
+  // Cast mock data to correct types
+  const dataSources = mockDataSources as unknown as DataSource[];
+  const predefinedPatterns = mockPredefinedPatterns as unknown as PatternDefinition[];
+  const patternResults = mockPatternResults as unknown as PatternDetectionResult[];
 
   // --- Mobile Detection ---
   useEffect(() => {
@@ -139,6 +127,17 @@ const AdvancedPatternAnalysis: React.FC = () => {
     );
   }, [handleAction]);
 
+  // New handlers for additional functionality
+  const handleAddDataSource = useCallback(() => {
+    // Implement the handler logic
+    toast.info("Add data source feature coming soon");
+  }, []);
+
+  const handleConfigureDataSource = useCallback((id: string) => {
+    // Implement the handler logic
+    toast.info(`Configure data source ${id} - feature coming soon`);
+  }, []);
+
   // --- Render ---
   return (
     <div className="space-y-6 p-4 md:p-6 bg-gray-900 text-gray-100 rounded-lg shadow-xl">
@@ -180,43 +179,44 @@ const AdvancedPatternAnalysis: React.FC = () => {
 
         {/* Tab Content Panels */}
         <div className="mt-4 p-4 bg-gray-800/50 rounded-b-md border border-t-0 border-gray-700">
-            <TabsContent value="datasources">
+          <TabsContent value="datasources">
             <DataSourcesTab
-                dataSources={dataSources as DataSource[]} // Assert type
-                handleImportData={handleImportData}
-                isLoading={isLoading} // Pass loading state if needed
+              dataSources={dataSources}
+              handleImportData={handleImportData}
+              handleAddDataSource={handleAddDataSource}
+              handleConfigureDataSource={handleConfigureDataSource}
             />
-            </TabsContent>
+          </TabsContent>
 
-            <TabsContent value="patterns">
+          <TabsContent value="patterns">
             <PatternsTab
-                patterns={predefinedPatterns as Pattern[]} // Assert type
-                isMobile={isMobile}
-                handleRunAnalysis={handleRunAnalysis} // Maybe trigger analysis from here?
-                isLoading={isLoading}
+              patterns={predefinedPatterns}
+              isMobile={isMobile}
+              handleRunAnalysis={handleRunAnalysis}
+              isLoading={isLoading}
             />
-            </TabsContent>
+          </TabsContent>
 
-            <TabsContent value="analysis">
+          <TabsContent value="analysis">
             <AnalysisTab
-                dataSources={dataSources as DataSource[]}
-                predefinedPatterns={predefinedPatterns as Pattern[]}
-                patternResults={patternResults as PatternResult[]} // Assert type
-                handleRunAnalysis={handleRunAnalysis}
-                handleExportReport={handleExportReport}
-                isLoading={isLoading} // Pass loading state for buttons
+              dataSources={dataSources}
+              predefinedPatterns={predefinedPatterns}
+              patternResults={patternResults}
+              handleRunAnalysis={handleRunAnalysis}
+              handleExportReport={handleExportReport}
+              analysisInProgress={isLoading}
             />
-            </TabsContent>
+          </TabsContent>
 
-            <TabsContent value="reports">
+          <TabsContent value="reports">
             <ReportsTab
-                patternResults={patternResults as PatternResult[]}
-                dataSources={dataSources as DataSource[]} // Needed for context?
-                handleExportReport={handleExportReport}
-                handleRunAnalysis={handleRunAnalysis} // Ability to re-run?
-                isLoading={isLoading} // Pass loading state for buttons
+              patternResults={patternResults}
+              dataSources={dataSources}
+              handleExportReport={handleExportReport}
+              handleRunAnalysis={handleRunAnalysis}
+              isLoading={isLoading}
             />
-            </TabsContent>
+          </TabsContent>
         </div>
       </Tabs>
     </div>
@@ -224,44 +224,3 @@ const AdvancedPatternAnalysis: React.FC = () => {
 };
 
 export default AdvancedPatternAnalysis;
-
-// --- Placeholder Child Components (for context, replace with actual) ---
-
-// Assuming similar structure for other tab components
-
-// ./patterns/DataSourcesTab.tsx (Example Structure)
-// interface DataSourcesTabProps {
-//   dataSources: DataSource[];
-//   handleImportData: () => void;
-//   isLoading: boolean;
-// }
-// const DataSourcesTab: React.FC<DataSourcesTabProps> = ({ dataSources, handleImportData, isLoading }) => (
-//   <div>
-//     <h3>Available Data Sources</h3>
-//     {/* Render data sources list */}
-//     <button onClick={handleImportData} disabled={isLoading}>
-//       {isLoading ? 'Importing...' : 'Import Selected Data'}
-//     </button>
-//   </div>
-// );
-// export default DataSourcesTab;
-
-// ./patterns/PatternsTab.tsx (Example Structure)
-// interface PatternsTabProps {
-//   patterns: Pattern[];
-//   isMobile: boolean;
-//   handleRunAnalysis: () => void; // Assuming you can trigger analysis from here
-//   isLoading: boolean;
-// }
-// const PatternsTab: React.FC<PatternsTabProps> = ({ patterns, isMobile, handleRunAnalysis, isLoading }) => (
-//     <div>
-//       <h3>Predefined Patterns</h3>
-//       {/* Render patterns list */}
-//       <p>Layout adapts on mobile: {isMobile ? 'Yes' : 'No'}</p>
-//       {/* Potentially add a button here too? */}
-//       {/* <button onClick={handleRunAnalysis} disabled={isLoading}>Run Analysis on Selected</button> */}
-//     </div>
-// );
-// export default PatternsTab;
-
-// ... and so on for AnalysisTab and ReportsTab

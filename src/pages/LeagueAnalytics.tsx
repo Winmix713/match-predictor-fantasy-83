@@ -15,6 +15,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Header from "@/components/Header";
 import { LeagueStatistics } from "@/components/LeagueStatistics";
+import { Match } from '@/types/league';
 
 // Mock data for league analytics
 const mockLeagues = [
@@ -25,67 +26,109 @@ const mockLeagues = [
   { id: "5", name: "Ligue 1", season: "2024-2025" },
 ];
 
-// Mock match data
-const mockMatches = [
+// Mock match data with all required properties for Match type
+const mockMatches: Match[] = [
   {
+    id: 1,
     date: "2025-04-03",
+    time: "15:00",
     home_team: "Liverpool",
     away_team: "Manchester Kék",
+    home_team_id: 101,
+    away_team_id: 102,
     ht_home_score: 1,
     ht_away_score: 1,
     home_score: 2,
     away_score: 2,
-    round: "Round 30"
+    round: "Round 30",
+    status: 'completed',
+    season: "2024-2025",
+    leagueId: 1
   },
   {
+    id: 2,
     date: "2025-04-03",
+    time: "17:30",
     home_team: "London Ágyúk",
     away_team: "Chelsea",
+    home_team_id: 103,
+    away_team_id: 104,
     ht_home_score: 2,
     ht_away_score: 0,
     home_score: 3,
     away_score: 1,
-    round: "Round 30"
+    round: "Round 30",
+    status: 'completed',
+    season: "2024-2025",
+    leagueId: 1
   },
   {
+    id: 3,
     date: "2025-04-04",
+    time: "20:00",
     home_team: "Tottenham",
     away_team: "Vörös Ördögök",
+    home_team_id: 105,
+    away_team_id: 106,
     ht_home_score: 0,
     ht_away_score: 1,
     home_score: 1,
     away_score: 2,
-    round: "Round 30"
+    round: "Round 30",
+    status: 'completed',
+    season: "2024-2025",
+    leagueId: 1
   },
   {
+    id: 4,
     date: "2025-04-04",
+    time: "15:00",
     home_team: "Newcastle",
     away_team: "Aston Oroszlán",
+    home_team_id: 107,
+    away_team_id: 108,
     ht_home_score: 1,
     ht_away_score: 1,
     home_score: 2,
     away_score: 1,
-    round: "Round 30"
+    round: "Round 30",
+    status: 'completed',
+    season: "2024-2025",
+    leagueId: 1
   },
   {
+    id: 5,
     date: "2025-04-05",
+    time: "15:00",
     home_team: "Wolverhampton",
     away_team: "Everton",
+    home_team_id: 109,
+    away_team_id: 110,
     ht_home_score: 0,
     ht_away_score: 0,
     home_score: 1,
     away_score: 0,
-    round: "Round 30"
+    round: "Round 30",
+    status: 'completed',
+    season: "2024-2025",
+    leagueId: 1
   },
   {
+    id: 6,
     date: "2025-04-05",
+    time: "17:30",
     home_team: "Brighton",
     away_team: "Brentford",
+    home_team_id: 111,
+    away_team_id: 112,
     ht_home_score: 2,
     ht_away_score: 0,
     home_score: 2,
     away_score: 1,
-    round: "Round 30"
+    round: "Round 30",
+    status: 'completed',
+    season: "2024-2025",
+    leagueId: 1
   },
 ];
 

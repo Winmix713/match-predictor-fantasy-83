@@ -16,6 +16,7 @@ export const calculateStandings = (
     if (!standings[match.home_team]) {
       standings[match.home_team] = {
         team: match.home_team,
+        teamId: match.home_team_id,
         played: 0,
         won: 0,
         drawn: 0,
@@ -30,6 +31,7 @@ export const calculateStandings = (
     if (!standings[match.away_team]) {
       standings[match.away_team] = {
         team: match.away_team,
+        teamId: match.away_team_id,
         played: 0,
         won: 0,
         drawn: 0,
@@ -136,10 +138,19 @@ export const calculateTeamForms = (matches: Match[]): TeamForm[] => {
     // Calculate last 5 results and full history
     const formResults: ('W' | 'D' | 'L')[] = [];
     let historyString = '';
+    // Find the teamId from one of the matches
+    let teamId = 0;
     
     sortedMatches.forEach(match => {
       let result: 'W' | 'D' | 'L';
       const isHome = match.home_team === team;
+      
+      // Set teamId when we find a match for this team
+      if (isHome) {
+        teamId = match.home_team_id;
+      } else {
+        teamId = match.away_team_id;
+      }
       
       if (isHome) {
         if (match.home_score > match.away_score) result = 'W';
@@ -157,6 +168,7 @@ export const calculateTeamForms = (matches: Match[]): TeamForm[] => {
     
     return {
       team,
+      teamId,
       form: formResults,
       history: historyString,
       position: 0 // This will be updated after sorting

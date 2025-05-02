@@ -66,16 +66,27 @@ export const MatchUploader: React.FC<MatchUploaderProps> = ({ onUpload }) => {
               row.home_score !== undefined && 
               row.away_score !== undefined
             )
-            .map(row => ({
+            .map((row, index) => ({
+              id: index + 1, // Generate temp IDs
               date: row.date,
+              time: row.time || '00:00',
               home_team: row.home_team,
               away_team: row.away_team,
+              home_team_id: parseInt(row.home_team_id || '0', 10),
+              away_team_id: parseInt(row.away_team_id || '0', 10),
               ht_home_score: parseInt(row.ht_home_score || '0', 10),
               ht_away_score: parseInt(row.ht_away_score || '0', 10),
               home_score: parseInt(row.home_score, 10),
               away_score: parseInt(row.away_score, 10),
-              round: row.round || undefined
-            }));
+              round: row.round || undefined,
+              stadium: row.stadium,
+              referee: row.referee,
+              attendance: row.attendance ? parseInt(row.attendance, 10) : undefined,
+              status: (row.status as Match['status']) || 'completed',
+              weather: row.weather,
+              season: row.season || 'unknown',
+              leagueId: parseInt(row.leagueId || '0', 10)
+            } as Match));
 
           if (matches.length === 0) {
             throw new Error('No valid match data found in the CSV');

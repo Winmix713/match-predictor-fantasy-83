@@ -1,9 +1,10 @@
+
 // src/components/DataSources/DataSourcesTab.tsx (or your chosen path)
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge"; // Use Shadcn Badge
-import { Upload, FilePlus, Sliders, Database, FileCsv, Wifi, User } from 'lucide-react';
+import { Upload, FilePlus, Sliders, Database, FileText, Wifi, User } from 'lucide-react';
 import { DataSource } from '../../types/match'; // Assuming types are in ../../types
 
 interface DataSourcesTabProps {
@@ -14,9 +15,9 @@ interface DataSourcesTabProps {
 }
 
 // Helper function for status badge styling
-const getStatusBadgeVariant = (status: string): "success" | "destructive" | "secondary" | "outline" => {
+const getStatusBadgeVariant = (status: string): "default" | "destructive" | "secondary" | "outline" => {
   switch (status?.toLowerCase()) {
-    case 'active': return 'success';
+    case 'active': return 'default';
     case 'error':
     case 'failed': return 'destructive';
     case 'inactive':
@@ -29,7 +30,7 @@ const getStatusBadgeVariant = (status: string): "success" | "destructive" | "sec
 const getSourceTypeInfo = (type: string): { variant: "default" | "secondary" | "outline", icon: React.ReactNode, label: string } => {
   switch (type?.toLowerCase()) {
     case 'api': return { variant: 'default', icon: <Wifi className="h-3 w-3 mr-1" />, label: 'API' };
-    case 'csv': return { variant: 'default', icon: <FileCsv className="h-3 w-3 mr-1" />, label: 'CSV' };
+    case 'csv': return { variant: 'default', icon: <FileText className="h-3 w-3 mr-1" />, label: 'CSV' };
     case 'database': return { variant: 'default', icon: <Database className="h-3 w-3 mr-1" />, label: 'Adatbázis' };
     case 'manual': return { variant: 'secondary', icon: <User className="h-3 w-3 mr-1" />, label: 'Manuális' };
     default: return { variant: 'outline', icon: null, label: type || 'Ismeretlen' };
