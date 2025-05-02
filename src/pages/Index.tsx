@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, Database, BarChart4, PieChart, BallFootball } from 'lucide-react';
+import { Trophy, Database, BarChart4, PieChart, Dribbble } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Header from '@/components/Header';
 import HeroSection from '@/components/Hero';
@@ -19,7 +19,7 @@ const Index = () => {
       <Header />
       <HeroSection />
 
-      {/* New Football Analytics Features Section */}
+      {/* Football Analytics Features Section */}
       <section className="py-16 bg-gradient-to-b from-gray-900/10 to-gray-900/60">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -49,7 +49,7 @@ const Index = () => {
             <Link to="/teams/1" className="block">
               <div className="bg-gray-800/60 rounded-lg p-6 border border-white/10 hover:border-green-500/50 hover:bg-gray-800/80 transition-all">
                 <div className="bg-green-500/20 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <BallFootball className="h-6 w-6 text-green-400" />
+                  <Dribbble className="h-6 w-6 text-green-400" />
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-2">Team Analytics</h3>
                 <p className="text-gray-400 mb-4">
