@@ -10,6 +10,7 @@ export const appRoutes = [
   { path: "/advanced-pattern", component: "AdvancedPattern" },
   { path: "/analysis", component: "Analysis" },
   { path: "/league-management", component: "LeagueManagement" },
+  { path: "/integrations", component: "Integrations" },
   { path: "*", component: "NotFound" }
 ];
 

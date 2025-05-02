@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
-import { Calendar, Menu, X, ArrowRight, Bell, Search, Trophy, Brain } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Calendar, Menu, X, ArrowRight, Bell, Search, Trophy, Brain, Link } from 'lucide-react';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import Logo from './Logo';
 import FancyNavigation from './FancyNavigation';
 
@@ -27,6 +26,7 @@ const Header = () => {
     { text: "Mérkőzések", href: "/matches", icon: <Calendar className="w-4 h-4" /> },
     { text: "V-Sports Elemzés", href: "/analysis", icon: <Brain className="w-4 h-4" /> },
     { text: "Bajnokság", href: "/league", icon: <Trophy className="w-4 h-4" /> },
+    { text: "Integrációk", href: "/integrations", icon: <Link className="w-4 h-4" /> },
   ];
 
   return (
@@ -44,20 +44,20 @@ const Header = () => {
         
         {/* User Section with Neumorphic buttons */}
         <div className="hidden md:flex items-center gap-3">
-          <Link 
+          <RouterLink 
             to="/login" 
             className="text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200 border-b border-transparent hover:border-white/50"
           >
             Bejelentkezés
-          </Link>
-          <Link 
+          </RouterLink>
+          <RouterLink 
             to="/signup" 
             className="group inline-flex items-center gap-1.5 relative overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white text-sm font-medium px-5 py-2.5 rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_20px_rgba(59,130,246,0.25)] transition-all duration-300"
           >
             <span className="relative z-10">Regisztráció</span>
             <ArrowRight className="w-3.5 h-3.5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/80 to-blue-600/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </Link>
+          </RouterLink>
         </div>
         
         {/* Mobile Menu Toggle with Neomorphic effect */}
@@ -76,7 +76,7 @@ const Header = () => {
           <div className="p-6 flex flex-col h-full">
             <div className="space-y-2 py-4">
               {navLinks.map((link, index) => (
-                <Link
+                <RouterLink
                   key={index}
                   to={link.href}
                   className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-300
@@ -87,25 +87,25 @@ const Header = () => {
                 >
                   {link.icon}
                   {link.text}
-                </Link>
+                </RouterLink>
               ))}
             </div>
             
             <div className="mt-auto pt-6 border-t border-gray-800/50 flex items-center gap-3">
-              <Link 
+              <RouterLink 
                 to="/login" 
                 className="flex-1 py-3 text-center text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200 border border-gray-700/30 rounded-xl bg-white/5 backdrop-blur-sm"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Bejelentkezés
-              </Link>
-              <Link 
+              </RouterLink>
+              <RouterLink 
                 to="/signup" 
                 className="flex-1 py-3 text-center bg-gradient-to-r from-blue-500/80 to-blue-600/80 shadow-[0_4px_12px_rgba(59,130,246,0.25)] backdrop-blur-sm text-white text-sm font-medium rounded-xl"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Regisztráció
-              </Link>
+              </RouterLink>
             </div>
             
             <div className="mt-6 text-center">

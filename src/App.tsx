@@ -16,6 +16,7 @@ import LeagueCreate from "./pages/LeagueCreate";
 import LeagueAnalytics from "./pages/LeagueAnalytics";
 import TeamDetails from "./pages/TeamDetails";
 import PlayerDetails from "./pages/PlayerDetails";
+import Integrations from "./pages/Integrations";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
           <Route path="/teams/:id" element={<TeamDetails />} />
           <Route path="/players/:id" element={<PlayerDetails />} />
           <Route path="/brandbook" element={<Brandbook />} />
+          <Route path="/integrations" element={<Integrations />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

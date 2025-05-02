@@ -64,12 +64,12 @@ const Matches = () => {
                 actionButton={seasonSelector}
               />
               
-              {/* Integration Navigation Cards - Fixed icon prop */}
+              {/* Updated to point to the Integrations page */}
               <IntegrationCards 
                 icon={BarChart}
-                title="Integration Cards" 
-                description="Cards for navigation between integrations"
-                linkTo="/analytics" 
+                title="Integrations" 
+                description="Access all available system integrations"
+                linkTo="/integrations" 
                 color="blue" 
               />
               
