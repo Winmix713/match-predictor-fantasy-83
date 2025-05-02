@@ -1,3 +1,4 @@
+
 // src/components/Patterns/PatternsTab.tsx (or your chosen path)
 import React, { useState, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,33 @@ interface PatternsTabProps {
 const PATTERN_TYPES = ['turnaround', 'scoreline', 'goals', 'custom'] as const;
 type PatternTypeTuple = typeof PATTERN_TYPES;
 type PatternType = PatternTypeTuple[number];
+
+// Helper function to get pattern type information
+const getPatternTypeInfo = (type: string) => {
+  switch (type) {
+    case 'turnaround':
+      return {
+        label: 'Turnaround',
+        badgeClass: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
+      };
+    case 'scoreline':
+      return {
+        label: 'Scoreline',
+        badgeClass: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+      };
+    case 'goals':
+      return {
+        label: 'Goals',
+        badgeClass: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
+      };
+    case 'custom':
+    default:
+      return {
+        label: 'Custom',
+        badgeClass: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300'
+      };
+  }
+};
 
 // Initial state for a new pattern condition
 const initialCondition: Omit<PatternCondition, 'id'> = {

@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, BarChart } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { toast } from 'sonner';
 import Header from "@/components/Header";
@@ -65,9 +64,9 @@ const Matches = () => {
                 actionButton={seasonSelector}
               />
               
-              {/* Integration Navigation Cards - Pass required props */}
+              {/* Integration Navigation Cards - Fixed icon prop */}
               <IntegrationCards 
-                icon="chart"
+                icon={BarChart}
                 title="Integration Cards" 
                 description="Cards for navigation between integrations"
                 linkTo="/analytics" 

@@ -89,8 +89,8 @@ export const predefinedPatterns: PatternDefinition[] = [
     description: 'Matches with 3+ goals scored in the second half',
     type: 'goals',
     conditions: [
-      { id: 'c5', field: 'ftHomeScore', operator: '-', value: 'htHomeScore' },
-      { id: 'c6', field: 'ftAwayScore', operator: '-', value: 'htAwayScore', logicalOperator: 'AND' },
+      { id: 'c5', field: 'ftHomeScore', operator: '>', value: 'htHomeScore' }, // Changed from "-" to ">"
+      { id: 'c6', field: 'ftAwayScore', operator: '>', value: 'htAwayScore', logicalOperator: 'AND' },
       { id: 'c7', field: 'secondHalfGoals', operator: '>=', value: 3, logicalOperator: 'AND' }
     ],
     createdAt: '2025-03-25T09:10:00Z',
