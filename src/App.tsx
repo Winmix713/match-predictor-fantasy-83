@@ -17,6 +17,10 @@ import LeagueAnalytics from "./pages/LeagueAnalytics";
 import TeamDetails from "./pages/TeamDetails";
 import PlayerDetails from "./pages/PlayerDetails";
 import Integrations from "./pages/Integrations";
+import AnalyticsIntegration from "./pages/integrations/AnalyticsIntegration";
+import DatabaseConnection from "./pages/integrations/DatabaseConnection";
+import ApiServices from "./pages/integrations/ApiServices";
+import WebhookSetup from "./pages/integrations/WebhookSetup";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +43,10 @@ const App = () => (
           <Route path="/players/:id" element={<PlayerDetails />} />
           <Route path="/brandbook" element={<Brandbook />} />
           <Route path="/integrations" element={<Integrations />} />
+          <Route path="/analytics" element={<AnalyticsIntegration />} />
+          <Route path="/database-connection" element={<DatabaseConnection />} />
+          <Route path="/api-services" element={<ApiServices />} />
+          <Route path="/webhook-setup" element={<WebhookSetup />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

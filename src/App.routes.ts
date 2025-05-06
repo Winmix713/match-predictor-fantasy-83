@@ -11,6 +11,10 @@ export const appRoutes = [
   { path: "/analysis", component: "Analysis" },
   { path: "/league-management", component: "LeagueManagement" },
   { path: "/integrations", component: "Integrations" },
+  { path: "/analytics", component: "AnalyticsIntegration" },
+  { path: "/database-connection", component: "DatabaseConnection" },
+  { path: "/api-services", component: "ApiServices" },
+  { path: "/webhook-setup", component: "WebhookSetup" },
   { path: "*", component: "NotFound" }
 ];
 
