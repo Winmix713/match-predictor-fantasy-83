@@ -1,20 +1,33 @@
 
 import React from 'react';
+import { BarChart, Brain } from 'lucide-react';
 
-const PredictionButtons: React.FC = () => {
+interface PredictionButtonsProps {
+  showAdvancedStats?: boolean;
+  onShowAdvancedStats?: () => void;
+}
+
+const PredictionButtons: React.FC<PredictionButtonsProps> = ({ 
+  showAdvancedStats = false,
+  onShowAdvancedStats 
+}) => {
   return (
-    <div className="grid grid-cols-3 gap-2 mt-4">
-      <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)] flex items-center justify-center gap-1">
-        <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-        <span>Hazai</span>
+    <div className="mt-4 flex gap-2">
+      <button 
+        className="flex-1 py-2 px-4 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg text-sm font-medium flex items-center justify-center gap-1.5 transition-colors"
+      >
+        <BarChart className="w-4 h-4" />
+        <span>Statisztikák</span>
       </button>
-      <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)] flex items-center justify-center gap-1">
-        <span className="w-2 h-2 rounded-full bg-gray-500"></span>
-        <span>Döntetlen</span>
-      </button>
-      <button className="bg-gradient-to-br from-white/10 to-white/5 text-xs text-white rounded-lg py-2.5 backdrop-blur-sm border border-white/10 hover:border-blue-400/20 transition-all duration-200 hover:shadow-[0_4px_12px_rgba(59,130,246,0.2)] flex items-center justify-center gap-1">
-        <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-        <span>Vendég</span>
+      
+      <button 
+        className={`flex-1 py-2 px-4 ${
+          showAdvancedStats ? 'bg-emerald-500/30 text-emerald-300' : 'bg-gray-800/50 text-gray-300 hover:bg-gray-800/80'
+        } rounded-lg text-sm font-medium flex items-center justify-center gap-1.5 transition-colors`}
+        onClick={onShowAdvancedStats}
+      >
+        <Brain className="w-4 h-4" />
+        <span>Advanced analízis</span>
       </button>
     </div>
   );

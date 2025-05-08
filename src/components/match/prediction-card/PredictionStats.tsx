@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Team } from '../../../data/premier-league-teams';
 import StatsSection from './StatsSection';
+import AdvancedPredictionStats from './AdvancedPredictionStats';
+import { usePrediction } from '../../../hooks/usePrediction';
 
 interface PredictionStatsProps {
   match: { home: Team; away: Team };
@@ -10,18 +12,43 @@ interface PredictionStatsProps {
 
 const PredictionStats: React.FC<PredictionStatsProps> = ({ match }) => {
   const [expanded, setExpanded] = useState(false);
+
+  const { prediction, teamAnalysis, isPredicting } = usePrediction({
+    homeTeam: match.home,
+    awayTeam: match.away
+  });
   
-  // Generate some random stats for the teams
-  const homeWinPercent = Math.round(Math.random() * 50) + 20;
-  const drawPercent = Math.round(Math.random() * 30);
-  const awayWinPercent = 100 - homeWinPercent - drawPercent;
+  // If we have prediction data, use it, otherwise generate some random placeholder stats
+  const homeWinPercent = prediction ? 
+    Math.round(prediction.modelPredictions.elo.homeWinProb * 100) :
+    Math.round(Math.random() * 50) + 20;
+    
+  const drawPercent = prediction ? 
+    Math.round(prediction.modelPredictions.elo.drawProb * 100) :
+    Math.round(Math.random() * 30);
+    
+  const awayWinPercent = prediction ? 
+    Math.round(prediction.modelPredictions.elo.awayWinProb * 100) :
+    100 - homeWinPercent - drawPercent;
   
   // Additional stats for the expanded view
-  const homeGoalChance = Math.round(Math.random() * 40) + 40;
-  const awayGoalChance = Math.round(Math.random() * 40) + 30;
-  const bothTeamsScoreChance = Math.round(Math.random() * 50) + 30;
+  const homeGoalChance = prediction ? 
+    Math.min(100, Math.round(prediction.homeExpectedGoals * 25)) :
+    Math.round(Math.random() * 40) + 40;
+    
+  const awayGoalChance = prediction ? 
+    Math.min(100, Math.round(prediction.awayExpectedGoals * 25)) :
+    Math.round(Math.random() * 40) + 30;
+    
+  const bothTeamsScoreChance = prediction ? 
+    Math.round(prediction.bothTeamsToScoreProb) :
+    Math.round(Math.random() * 50) + 30;
+    
   const overUnderLine = 2.5;
-  const overChance = Math.round(Math.random() * 50) + 25;
+  const overChance = prediction ? 
+    Math.round(((prediction.homeExpectedGoals + prediction.awayExpectedGoals) > overUnderLine ? 70 : 40) + (Math.random() * 20 - 10)) :
+    Math.round(Math.random() * 50) + 25;
+    
   const underChance = 100 - overChance;
   
   const toggleExpanded = () => setExpanded(!expanded);
@@ -76,16 +103,29 @@ const PredictionStats: React.FC<PredictionStatsProps> = ({ match }) => {
       
       {/* Expanded Stats */}
       {expanded && (
-        <StatsSection 
-          homeTeam={match.home}
-          awayTeam={match.away}
-          bothTeamsScoreChance={bothTeamsScoreChance}
-          homeGoalChance={homeGoalChance}
-          awayGoalChance={awayGoalChance}
-          overUnderLine={overUnderLine}
-          overChance={overChance}
-          underChance={underChance}
-        />
+        <>
+          <StatsSection 
+            homeTeam={match.home}
+            awayTeam={match.away}
+            bothTeamsScoreChance={bothTeamsScoreChance}
+            homeGoalChance={homeGoalChance}
+            awayGoalChance={awayGoalChance}
+            overUnderLine={overUnderLine}
+            overChance={overChance}
+            underChance={underChance}
+          />
+          
+          {prediction && (
+            <div className="mt-4">
+              <AdvancedPredictionStats
+                prediction={prediction}
+                teamAnalysis={teamAnalysis || undefined}
+                homeTeam={match.home}
+                awayTeam={match.away}
+              />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

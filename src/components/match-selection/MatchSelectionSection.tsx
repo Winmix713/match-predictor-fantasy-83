@@ -1,14 +1,15 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { Calendar, ArrowRight } from 'lucide-react';
+import { Calendar, ArrowRight, Brain } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { toast } from 'sonner';
 import { PREMIER_LEAGUE_TEAMS } from '../../data/premier-league-teams';
 import MatchCardGrid from './MatchCardGrid';
 import PredictionResultsSection from './PredictionResultsSection';
+import { analyzeTeams } from '../../utils/predictionService';
 
 const MatchSelectionSection = () => {
-  // State for selected teams in each match card (now 8 matches with none selected by default)
+  // State for selected teams in each match card
   const [selectedTeams, setSelectedTeams] = useState([
     { home: null, away: null },
     { home: null, away: null },
@@ -92,6 +93,18 @@ const MatchSelectionSection = () => {
       return;
     }
     
+    // If we have at least one match with both teams selected, show analysis
+    selectedTeams.forEach(match => {
+      if (match.home && match.away) {
+        try {
+          // Pre-analyze teams to warm up the cache
+          analyzeTeams(match.home, match.away);
+        } catch (e) {
+          // Ignore errors in pre-analysis
+        }
+      }
+    });
+    
     toast.success(`${completeMatches} mérkőzés predikciója elindítva`, {
       description: "Az eredmények elérhetőek alább"
     });
@@ -118,6 +131,15 @@ const MatchSelectionSection = () => {
               </h2>
             </div>
           </div>
+          
+          <Button 
+            size="sm"
+            variant="outline"
+            className="bg-blue-500/10 border-blue-500/30 text-blue-400 hover:bg-blue-500/20"
+          >
+            <Brain className="w-4 h-4 mr-2" />
+            V-Sports Elemzési Rendszer
+          </Button>
         </div>
         
         {/* Match Selection Grid */}
@@ -140,7 +162,7 @@ const MatchSelectionSection = () => {
         </div>
         
         {/* Predictions Results Section */}
-        {predictionRun && selectedTeams.some(match => match.home && match.away) && !allMatchesCompleted && (
+        {predictionRun && selectedTeams.some(match => match.home && match.away) && (
           <PredictionResultsSection 
             selectedTeams={selectedTeams.filter(match => match.home && match.away)} 
           />
