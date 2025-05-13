@@ -1,0 +1,1990 @@
+import React from "react";
+import { Card, Button, Avatar } from "@heroui/react";
+import { Icon } from "@iconify/react";
+
+// Replace direct component imports with organized imports from component folders
+import { TimeScaleSlider } from "./components/ui/time-scale-slider";
+import { ServerCard } from "./components/cards/server-card";
+import { TestimonialCard } from "./components/cards/testimonial-card";
+import { FeatureCard } from "./components/cards/feature-card";
+import { RatingScale } from "./components/ui/rating-scale";
+import { SurveyCard } from "./components/survey/survey-card";
+import { InsightCard } from "./components/cards/insight-card";
+import { ColorStatusCard } from "./components/cards/color-status-card";
+
+// Import data from centralized data files
+import { testimonials } from "./data/testimonials";
+import { features } from "./data/features";
+import { surveys } from "./data/surveys";
+import { colorStatuses } from "./data/color-statuses";
+
+// TimeScaleSlider Component
+const TimeScaleSlider = () => {
+  return (
+    <Card className="bg-black border border-gray-800 rounded-xl p-4 relative">
+      <div className="flex justify-between items-center text-gray-300 text-sm">
+        <div className="flex flex-col items-center">
+          <span>12:50</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>12:55</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center relative">
+          <span>13:00</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+          <div className="absolute -top-8">
+            <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white text-xs px-3 py-1 rounded-full">
+              100+
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>13:05</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>13:10</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+      </div>
+      
+      {/* Active selection area */}
+      <div className="absolute top-1/2 left-[15%] right-[15%] transform -translate-y-1/2 h-12 rounded-full border border-blue-500 bg-gradient-to-r from-blue-900/30 to-blue-800/30"></div>
+      
+      {/* Pink dots */}
+      <div className="absolute top-1/2 left-[15%] transform -translate-y-1/2 w-2 h-2 rounded-full bg-pink-500"></div>
+      <div className="absolute top-1/2 left-[30%] transform -translate-y-1/2 w-2 h-2 rounded-full bg-pink-500"></div>
+      <div className="absolute top-1/2 left-[50%] transform -translate-y-1/2 w-2 h-2 rounded-full bg-pink-500"></div>
+      <div className="absolute top-1/2 left-[70%] transform -translate-y-1/2 w-2 h-2 rounded-full bg-pink-500"></div>
+    </Card>
+  );
+};
+
+// ServerCard Component
+const ServerCard = () => {
+  return (
+    <Card className="bg-black border border-gray-800 rounded-xl overflow-hidden">
+      {/* Header */}
+      <div className="bg-blue-600 p-3 flex items-center">
+        <h3 className="text-white font-medium">Radis-Master</h3>
+      </div>
+      
+      {/* Content */}
+      <div className="p-3 space-y-2">
+        <ServerItem name="US-east-1b" speed="150 kbps" />
+        <ServerItem name="US-east-1b" speed="150 kbps" />
+      </div>
+    </Card>
+  );
+};
+
+// TestimonialCard Component
+interface TestimonialCardProps {
+  name: string;
+  position: string;
+  accentColor: string;
+  quote: string;
+  highlightedText: string;
+  strategyCount: number;
+}
+
+const TestimonialCard = ({ 
+  name, 
+  position, 
+  accentColor, 
+  quote, 
+  highlightedText,
+  strategyCount
+}: TestimonialCardProps) => {
+  // Split the quote to highlight specific text
+  const quoteParts = quote.split(highlightedText);
+  
+  // Generate a unique avatar ID based on the name
+  const avatarId = name.replace(/\s+/g, '').toLowerCase();
+  
+  return (
+    <Card 
+      className="bg-black rounded-3xl overflow-hidden relative"
+      style={{
+        borderColor: accentColor,
+        borderWidth: "1px",
+        background: `radial-gradient(circle at bottom right, ${accentColor}33, transparent 70%)`
+      }}
+    >
+      {/* Top left corner accent */}
+      <div 
+        className="absolute top-0 left-0 w-24 h-24 rounded-br-[100px]"
+        style={{ backgroundColor: accentColor }}
+      >
+        <div className="absolute top-4 left-4">
+          <Icon icon="lucide:settings" className="text-black" width={20} />
+        </div>
+      </div>
+      
+      {/* Top indicator */}
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: accentColor }}></div>
+      </div>
+      
+      {/* Left indicator */}
+      <div className="absolute left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: accentColor }}></div>
+      </div>
+      
+      {/* Right indicator */}
+      <div className="absolute right-0 bottom-1/3 transform translate-x-1/2">
+        <div className="w-2 h-2 rounded-full bg-pink-500"></div>
+        <div className="h-px w-32 bg-gradient-to-r from-pink-500 to-transparent"></div>
+        <div className="text-gray-400 text-xs mt-1 ml-auto text-right">More option</div>
+      </div>
+      
+      {/* Strategy dropdown */}
+      <div className="pt-4 px-4 flex justify-end">
+        <Button 
+          className="bg-gray-900 text-white border-gray-800"
+          endContent={<Icon icon="lucide:chevron-down" width={16} />}
+        >
+          {strategyCount} strategy
+        </Button>
+      </div>
+      
+      {/* Content */}
+      <div className="p-6 pt-12">
+        <div className="flex items-start mb-8">
+          <Avatar 
+            src={`https://img.heroui.chat/image/avatar?w=80&h=80&u=${avatarId}`}
+            className="w-16 h-16 rounded-2xl border border-gray-800"
+          />
+          <div className="ml-4">
+            <h3 className="text-white text-xl font-medium">{name}</h3>
+            <p className="text-gray-400">{position}</p>
+          </div>
+        </div>
+        
+        <div className="text-xl">
+          <span className="text-gray-400">"</span>
+          <span className="text-gray-400">{quoteParts[0]}</span>
+          <span className="text-white font-medium">{highlightedText}</span>
+          <span className="text-gray-400">{quoteParts[1]}</span>
+        </div>
+      </div>
+    </Card>
+  );
+};
+
+// FeatureCard Component
+interface FeatureCardProps {
+  title: string;
+  description: string;
+  icon: string;
+  accentColor: string;
+  iconPosition?: "top" | "left";
+}
+
+const FeatureCard = ({ 
+  title, 
+  description, 
+  icon, 
+  accentColor,
+  iconPosition = "left" 
+}: FeatureCardProps) => {
+  return (
+    <Card 
+      className="bg-black/50 rounded-3xl overflow-hidden relative p-6"
+      style={{
+        borderColor: accentColor,
+        borderWidth: "1px",
+        background: `radial-gradient(circle at bottom right, ${accentColor}20, transparent 70%)`
+      }}
+    >
+      {/* Top indicator */}
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: accentColor }}></div>
+      </div>
+      
+      {/* Icon */}
+      {iconPosition === "top" ? (
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="bg-gray-900 p-3 rounded-xl border border-gray-800">
+            <Icon icon={icon} style={{ color: accentColor }} width={24} />
+          </div>
+        </div>
+      ) : (
+        <div className="absolute top-0 left-0 transform -translate-y-1/2">
+          <div className="bg-gray-900 p-3 rounded-xl border border-gray-800">
+            <Icon icon={icon} style={{ color: accentColor }} width={24} />
+          </div>
+        </div>
+      )}
+      
+      {/* Content */}
+      <div className={`${iconPosition === "top" ? "pt-8" : "pt-0"}`}>
+        <h2 className="text-white text-2xl font-medium mb-3">{title}</h2>
+        <p className="text-gray-400">{description}</p>
+      </div>
+    </Card>
+  );
+};
+
+// RatingScale Component
+const RatingScale = () => {
+  return (
+    <Card className="bg-black border border-gray-800 rounded-xl p-4 relative">
+      <div className="flex justify-between items-center text-gray-300 text-sm">
+        {/* Scale numbers */}
+        <div className="flex flex-col items-center">
+          <span>10</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>20</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>30</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>40</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>50</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>60</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>70</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>80</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>100</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+      </div>
+      
+      {/* Rating labels */}
+      <div className="absolute top-0 left-[10%] transform -translate-y-1/2">
+        <div className="bg-gray-900/80 text-white text-xs px-3 py-1 rounded-lg">
+          Poor
+        </div>
+      </div>
+      
+      <div className="absolute top-0 left-[30%] transform -translate-y-1/2">
+        <div className="bg-gray-900/80 text-white text-xs px-3 py-1 rounded-lg">
+          Ok
+        </div>
+      </div>
+      
+      {/* Active selection area */}
+      <div className="absolute top-1/2 left-[60%] right-[10%] transform -translate-y-1/2 h-12 rounded-full border border-blue-500 bg-gradient-to-r from-blue-900/30 to-blue-800/30">
+        <div className="absolute top-0 right-1/2 transform -translate-y-1/2">
+          <div className="bg-pink-500 text-white text-xs px-3 py-1 rounded-full">
+            Excellent
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+};
+
+// GaugeChart Component
+interface GaugeChartProps {
+  value: number;
+  color: string;
+  size?: "sm" | "md" | "lg";
+  thickness?: number;
+}
+
+const GaugeChart = ({ 
+  value, 
+  color, 
+  size = "md",
+  thickness = 6 
+}: GaugeChartProps) => {
+  // Calculate the size based on the prop
+  const sizeMap = {
+    sm: 120,
+    md: 180,
+    lg: 240
+  };
+  
+  const diameter = sizeMap[size];
+  const radius = diameter / 2;
+  const circumference = 2 * Math.PI * radius;
+  const semi = circumference / 2;
+  const strokeDashoffset = semi - (semi * value) / 100;
+  
+  return (
+    <div className="relative flex items-center justify-center">
+      <svg
+        width={diameter}
+        height={diameter / 2}
+        viewBox={`0 0 ${diameter} ${diameter / 2}`}
+        className="transform rotate-180"
+      >
+        {/* Background arc */}
+        <path
+          d={`M ${thickness / 2}, ${diameter / 2} a ${radius - thickness / 2}, ${
+            radius - thickness / 2
+          } 0 1, 1 ${diameter - thickness}, 0`}
+          fill="none"
+          stroke="#333"
+          strokeWidth={thickness}
+          strokeLinecap="round"
+        />
+        
+        {/* Foreground arc */}
+        <path
+          d={`M ${thickness / 2}, ${diameter / 2} a ${radius - thickness / 2}, ${
+            radius - thickness / 2
+          } 0 1, 1 ${diameter - thickness}, 0`}
+          fill="none"
+          stroke={color}
+          strokeWidth={thickness}
+          strokeLinecap="round"
+          strokeDasharray={semi}
+          strokeDashoffset={strokeDashoffset}
+        />
+        
+        {/* Indicator dot */}
+        <circle
+          cx={diameter / 2 + (radius - thickness) * Math.cos(Math.PI * (1 - value / 100))}
+          cy={diameter / 2 + (radius - thickness) * Math.sin(Math.PI * (1 - value / 100))}
+          r={thickness / 1.5}
+          fill="#fff"
+        />
+      </svg>
+      
+      {/* Value display */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 translate-y-1/4 text-center">
+        <p className="text-4xl font-bold text-white">{value}%</p>
+      </div>
+    </div>
+  );
+};
+
+// SurveyOption Interface
+interface SurveyOption {
+  label: string;
+  value: number;
+  color: string;
+}
+
+// SurveyCard Component
+interface SurveyCardProps {
+  team: string;
+  question: string;
+  options: SurveyOption[];
+  gaugeLabel: string;
+  gaugeValue: number;
+  gaugeColor: string;
+  rightContent?: string;
+}
+
+const SurveyCard = ({
+  team,
+  question,
+  options,
+  gaugeLabel,
+  gaugeValue,
+  gaugeColor,
+  rightContent
+}: SurveyCardProps) => {
+  return (
+    <Card
+      className="bg-black rounded-3xl overflow-hidden relative p-6"
+      style={{
+        borderColor: gaugeColor,
+        borderWidth: "1px",
+        background: `radial-gradient(circle at bottom right, ${gaugeColor}20, transparent 70%)`
+      }}
+    >
+      {/* Top indicator */}
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: gaugeColor }}></div>
+      </div>
+      
+      {/* Right content if provided */}
+      {rightContent && (
+        <div className="absolute right-0 top-1/3 transform translate-x-1/2">
+          <div className="h-px w-32 bg-gradient-to-r from-pink-500 to-transparent"></div>
+          <div className="text-gray-400 text-xs mt-1 ml-auto text-right">{rightContent}</div>
+        </div>
+      )}
+      
+      {/* Team selector */}
+      <div className="mb-4">
+        <Button
+          className="bg-gray-900 text-white border-gray-800"
+          endContent={<Icon icon="lucide:chevron-down" width={16} />}
+        >
+          {team}
+        </Button>
+      </div>
+      
+      {/* Question */}
+      <div className="mb-6">
+        <h2 className="text-white text-2xl font-light leading-tight">{question}</h2>
+      </div>
+      
+      {/* Options */}
+      <div className="mb-6 space-y-2">
+        {options.map((option, index) => (
+          <div key={index} className="flex items-center">
+            <div className="w-3 h-3 mr-2" style={{ backgroundColor: option.color }}></div>
+            <span className="text-white mr-2">{option.label}</span>
+            <span className="text-white">{option.value}</span>
+          </div>
+        ))}
+      </div>
+      
+      {/* Gauge chart */}
+      <div className="flex flex-col items-center">
+        <GaugeChart value={gaugeValue} color={gaugeColor} />
+        <div className="text-gray-400 text-lg -mt-4">{gaugeLabel}</div>
+      </div>
+      
+      {/* Bottom indicator */}
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: gaugeColor }}></div>
+      </div>
+    </Card>
+  );
+};
+
+// InsightCard Component
+interface InsightCardProps {
+  title: string;
+  question: string;
+}
+
+const InsightCard = ({ title, question }: InsightCardProps) => {
+  return (
+    <Card
+      className="bg-black rounded-3xl overflow-hidden relative p-6"
+      style={{
+        borderColor: "#333",
+        borderWidth: "1px"
+      }}
+    >
+      {/* Bottom indicator */}
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
+        <div className="w-2 h-2 rounded-full bg-green-500"></div>
+      </div>
+      
+      {/* Title selector */}
+      <div className="mb-6">
+        <Button
+          className="bg-gray-900 text-white border-gray-800"
+          endContent={<Icon icon="lucide:chevron-down" width={16} />}
+        >
+          {title}
+        </Button>
+      </div>
+      
+      {/* Question */}
+      <div className="mb-4">
+        <h2 className="text-white text-2xl font-light leading-tight">{question}</h2>
+      </div>
+    </Card>
+  );
+};
+
+// ColorStatusCard Component
+interface ColorStatusCardProps {
+  color: string;
+  hexCode: string;
+  rgbValues: number[];
+  icon: string;
+  accentColor: string;
+  iconShape?: "circle" | "triangle";
+}
+
+const ColorStatusCard = ({
+  color,
+  hexCode,
+  rgbValues,
+  icon,
+  accentColor,
+  iconShape = "circle"
+}: ColorStatusCardProps) => {
+  // Format RGB string
+  const rgbString = rgbValues.join(" ");
+  
+  return (
+    <div className="relative">
+      {/* Color label */}
+      <div className="absolute top-1/2 left-0 transform -translate-x-full -translate-y-1/2 flex items-center">
+        <div className="w-2 h-2 rounded-full mr-2" style={{ backgroundColor: accentColor }}></div>
+        <span className="text-white">{color}</span>
+      </div>
+      
+      <Card
+        className="bg-black rounded-3xl overflow-hidden relative p-6 flex items-center justify-center"
+        style={{
+          borderColor: accentColor,
+          borderWidth: "1px",
+          background: `radial-gradient(circle at center, ${accentColor}40, transparent 70%)`,
+          aspectRatio: "1/1"
+        }}
+      >
+        {/* Icon */}
+        {iconShape === "triangle" ? (
+          <div className="text-center">
+            <div className="bg-pink-500 p-3 rounded-lg inline-block">
+              <Icon icon={icon} className="text-white" width={24} />
+            </div>
+          </div>
+        ) : (
+          <div className="text-center">
+            <div 
+              className="p-3 rounded-lg inline-block"
+              style={{ 
+                backgroundColor: accentColor,
+                clipPath: "polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%)"
+              }}
+            >
+              <Icon icon={icon} className="text-black" width={24} />
+            </div>
+          </div>
+        )}
+      </Card>
+      
+      {/* Color details */}
+      <div className="mt-2 text-gray-400">
+        <div>HEX: {hexCode}</div>
+        <div>RGB: {rgbString}</div>
+      </div>
+    </div>
+  );
+};
+
+// Main App Component
+export default function App() {
+  return (
+    <div className="min-h-screen bg-black p-8 flex flex-col gap-12 items-center justify-center">
+      <div className="w-full max-w-md">
+        <h3 className="text-blue-500 font-medium mb-2 flex items-center">
+          <span className="inline-block w-2 h-2 rounded-full bg-blue-500 mr-2"></span>
+          The time scale
+        </h3>
+        <TimeScaleSlider />
+      </div>
+      
+      <div className="w-full max-w-md">
+        <h3 className="text-blue-500 font-medium mb-2 flex items-center">
+          <span className="inline-block w-2 h-2 rounded-full bg-blue-500 mr-2"></span>
+          UI Element
+        </h3>
+        <ServerCard />
+      </div>
+      
+      <div className="w-full max-w-md grid grid-cols-1 gap-8">
+        {testimonials.map((testimonial, index) => (
+          <TestimonialCard 
+            key={index}
+            {...testimonial}
+          />
+        ))}
+        
+        {features.map((feature, index) => (
+          <FeatureCard 
+            key={index}
+            {...feature}
+          />
+        ))}
+      </div>
+      
+      <div className="w-full max-w-4xl">
+        <RatingScale />
+      </div>
+      
+      <div className="w-full max-w-md grid grid-cols-1 md:grid-cols-2 gap-8">
+        {surveys.map((survey, index) => (
+          <SurveyCard 
+            key={index}
+            {...survey}
+          />
+        ))}
+      </div>
+      
+      <div className="w-full max-w-md">
+        <InsightCard 
+          title="Insight"
+          question="What challenges do you face when creating videos from images using current video creation tools?"
+        />
+      </div>
+      
+      <div className="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {colorStatuses.map((status, index) => (
+          <ColorStatusCard 
+            key={index}
+            {...status}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+----------------------------------------------------
+import React from "react";
+import { Card, CardBody, CardHeader, Button, Tabs, Tab, Tooltip, Progress, Chip, Divider } from "@heroui/react";
+import { Icon } from "@iconify/react";
+import { motion } from "framer-motion";
+
+// League Table Types and Data
+interface TeamData {
+  position: number;
+  logo: string;
+  name: string;
+  results: Array<"W" | "D" | "L">;
+  points: number;
+}
+
+const teams: TeamData[] = [
+  {
+    position: 1,
+    logo: "logos:arsenal",
+    name: "Arsenal",
+    results: ["W", "W", "D", "W", "W"],
+    points: 88
+  },
+  {
+    position: 2,
+    logo: "logos:manchester-city",
+    name: "Man City",
+    results: ["W", "W", "W", "D", "W"],
+    points: 85
+  },
+  {
+    position: 3,
+    logo: "logos:liverpool",
+    name: "Liverpool",
+    results: ["L", "W", "W", "W", "D"],
+    points: 79
+  }
+];
+
+// Stats Card Data
+interface StatItem {
+  label: string;
+  homeValue: number;
+  awayValue: number;
+}
+
+const stats: StatItem[] = [
+  { label: "Birtoklás", homeValue: 54, awayValue: 46 },
+  { label: "Lövések", homeValue: 12, awayValue: 8 },
+  { label: "Kapura lövések", homeValue: 5, awayValue: 3 },
+  { label: "Szögletek", homeValue: 7, awayValue: 4 }
+];
+
+// Chart Data
+const chartData = [
+  { month: "H1", value: 65 },
+  { month: "H2", value: 70 },
+  { month: "H3", value: 55 },
+  { month: "H4", value: 80 },
+  { month: "H5", value: 65 },
+  { month: "H6", value: 75 },
+  { month: "H7", value: 60 },
+  { month: "H8", value: 70 },
+  { month: "H9", value: 75 },
+  { month: "H10", value: 80 },
+  { month: "H11", value: 75 },
+  { month: "H12", value: 80 },
+];
+
+// League Table Component
+const LeagueTable: React.FC = () => {
+  return (
+    <Card className="bg-content1 shadow-md">
+      <CardHeader className="pb-0 pt-4 px-4 flex-col items-start">
+        <h2 className="text-2xl font-bold">Bajnokság legjobb csapatai</h2>
+        <p className="text-default-500 text-sm">Premier League állás - 2023/24 szezon</p>
+      </CardHeader>
+      <CardBody>
+        <div className="space-y-3">
+          {teams.map((team, index) => (
+            <motion.div 
+              key={team.position} 
+              className="flex items-center p-3 bg-content2 rounded-lg hover:bg-content3 transition-all cursor-pointer"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              <div className="w-8 text-center font-semibold text-default-500">
+                {team.position}.
+              </div>
+              <div className="w-10 h-10 flex items-center justify-center">
+                <Icon icon={team.logo} width={28} height={28} />
+              </div>
+              <div className="ml-2 font-semibold text-lg flex-grow">
+                {team.name}
+              </div>
+              <div className="flex gap-2 mx-4">
+                {team.results.map((result, idx) => (
+                  <Tooltip key={idx} content={result === "W" ? "Győzelem" : result === "D" ? "Döntetlen" : "Vereség"}>
+                    <div
+                      className={`w-8 h-8 flex items-center justify-center rounded font-semibold ${
+                        result === "W" ? "bg-green-600" : result === "D" ? "bg-slate-500" : "bg-red-600"
+                      }`}
+                    >
+                      {result}
+                    </div>
+                  </Tooltip>
+                ))}
+              </div>
+              <Chip color="primary" variant="flat" className="font-bold">
+                {team.points} pont
+              </Chip>
+            </motion.div>
+          ))}
+        </div>
+      </CardBody>
+    </Card>
+  );
+};
+
+// Stats Card Component
+const StatsCard: React.FC = () => {
+  return (
+    <Card className="bg-content1 shadow-md">
+      <CardHeader className="pb-0 pt-4 px-4 flex-col items-start">
+        <h2 className="text-2xl font-bold">Professzionális adatelemzés</h2>
+        <p className="text-default-500 text-sm">
+          Áttekinthető adatok és grafikonok segítségével jobb döntéseket hozhatsz a
+          mérkőzés kimenetelével kapcsolatban.
+        </p>
+      </CardHeader>
+      <CardBody>
+        <div className="space-y-5">
+          {stats.map((stat, index) => (
+            <motion.div 
+              key={stat.label} 
+              className="space-y-1"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              <div className="flex justify-between text-sm">
+                <span>{stat.label}</span>
+                <div>
+                  <span className="text-primary font-medium">{stat.homeValue}</span>
+                  <span className="text-default-500"> / {stat.awayValue}</span>
+                </div>
+              </div>
+              <Tooltip content={`${Math.round((stat.homeValue / (stat.homeValue + stat.awayValue)) * 100)}%`}>
+                <Progress 
+                  aria-label={stat.label} 
+                  value={stat.homeValue} 
+                  maxValue={stat.homeValue + stat.awayValue}
+                  className="h-2"
+                  color="primary"
+                />
+              </Tooltip>
+            </motion.div>
+          ))}
+        </div>
+      </CardBody>
+    </Card>
+  );
+};
+
+// Match Card Component
+interface MatchCardProps {
+  variant?: "simple" | "detailed";
+}
+
+const MatchCard: React.FC<MatchCardProps> = ({ variant = "simple" }) => {
+  const isSimple = variant === "simple";
+  
+  const homeTeam = isSimple ? {
+    name: "Arsenal",
+    logo: "logos:arsenal",
+    location: "Otthon"
+  } : {
+    name: "London Ágyúk",
+    logo: "logos:arsenal",
+    location: "Hazai"
+  };
+  
+  const awayTeam = isSimple ? {
+    name: "Chelsea",
+    logo: "logos:chelsea",
+    location: "Vendég"
+  } : {
+    name: "Manchester Kék",
+    logo: "logos:manchester-city",
+    location: "Vendég"
+  };
+  
+  const predictions = isSimple ? [
+    { label: "", value: 42 },
+    { label: "", value: 28 },
+    { label: "", value: 30 }
+  ] : [
+    { label: "London Ágyúk", value: 28 },
+    { label: "Döntetlen", value: 28 },
+    { label: "Manchester Kék", value: 44 }
+  ];
+  
+  return (
+    <Card className="bg-content1 shadow-md overflow-hidden">
+      <CardHeader className="pb-0 pt-4 px-4 flex justify-between items-center">
+        <Chip
+          startContent={variant === "simple" ? null : <Icon icon="lucide:calendar" size={14} />}
+          variant="flat"
+          color="primary"
+          className="h-7"
+        >
+          {isSimple ? "Élő mérkőzés" : "Upcoming match"}
+        </Chip>
+        <Chip
+          startContent={<Icon icon="lucide:clock" size={14} />}
+          variant="flat"
+          color="default"
+          className="h-7"
+        >
+          21:00
+        </Chip>
+        {isSimple && (
+          <div className="bg-content2 p-2 rounded-lg">
+            <Icon icon="lucide:trophy" size={20} className="text-warning" />
+          </div>
+        )}
+      </CardHeader>
+      
+      <CardBody>
+        <motion.div 
+          className="flex justify-between items-center mb-6"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="flex flex-col items-center">
+            <div className="bg-content2 p-3 rounded-full mb-2 relative">
+              <motion.div
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.5, type: "spring" }}
+              >
+                <Icon icon={homeTeam.logo} width={40} height={40} />
+              </motion.div>
+              <div className="absolute -bottom-1 -right-1 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                1
+              </div>
+            </div>
+            <div className="font-semibold">{homeTeam.name}</div>
+            <Chip size="sm" variant="flat" color="primary" className="mt-1">
+              {homeTeam.location}
+            </Chip>
+          </div>
+          
+          <div className="flex flex-col items-center">
+            <div className="text-xl font-bold mb-1">VS</div>
+            <Chip size="sm" color="danger" variant="flat" className="animate-pulse">
+              Élő
+            </Chip>
+          </div>
+          
+          <div className="flex flex-col items-center">
+            <div className="bg-content2 p-3 rounded-full mb-2 relative">
+              <motion.div
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.5, type: "spring" }}
+              >
+                <Icon icon={awayTeam.logo} width={40} height={40} />
+              </motion.div>
+              {!isSimple && (
+                <div className="absolute -bottom-1 -right-1 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  2
+                </div>
+              )}
+            </div>
+            <div className="font-semibold">{awayTeam.name}</div>
+            <Chip size="sm" variant="flat" color="default" className="mt-1">
+              {awayTeam.location}
+            </Chip>
+          </div>
+        </motion.div>
+        
+        <div>
+          <div className="flex justify-between items-center mb-2">
+            <div className="text-sm font-medium">Tipp esélyek</div>
+            {!isSimple && (
+              <Button size="sm" variant="light" endContent={<Icon icon="lucide:chevron-up" size={14} />}>
+                Kevesebb
+              </Button>
+            )}
+          </div>
+          
+          <div className="space-y-3 mb-4">
+            {predictions.map((pred, idx) => (
+              <motion.div 
+                key={idx} 
+                className="space-y-1"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: idx * 0.1 }}
+              >
+                {!isSimple && (
+                  <div className="flex justify-between text-sm">
+                    <span>{pred.label}</span>
+                    <span className="font-medium">{pred.value}%</span>
+                  </div>
+                )}
+                <Progress 
+                  aria-label={`Prediction ${idx + 1}`} 
+                  value={pred.value} 
+                  maxValue={100}
+                  className="h-2"
+                  color={idx === 0 ? "primary" : idx === 1 ? "default" : "primary"}
+                />
+              </motion.div>
+            ))}
+            
+            {isSimple && (
+              <div className="flex justify-between text-sm text-default-500 mt-1">
+                <span>42%</span>
+                <span>28%</span>
+                <span>30%</span>
+              </div>
+            )}
+          </div>
+          
+          {!isSimple && (
+            <div className="space-y-4">
+              <Card className="bg-content2 shadow-none">
+                <CardBody className="p-4">
+                  <div className="flex justify-between mb-2">
+                    <div className="text-sm font-medium">% További statisztikák</div>
+                  </div>
+                  
+                  <div className="mb-3">
+                    <div className="text-sm mb-2 font-medium">Mindkét csapat gólt szerez</div>
+                    <div className="flex justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span>London Ágyúk gólt szerez</span>
+                          <span className="font-medium">77%</span>
+                        </div>
+                        <Progress 
+                          aria-label="Home team scores" 
+                          value={77} 
+                          maxValue={100}
+                          className="h-2"
+                          color="primary"
+                        />
+                      </div>
+                      
+                      <div className="flex-1">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span>Manchester Kék gólt szerez</span>
+                          <span className="font-medium">57%</span>
+                        </div>
+                        <Progress 
+                          aria-label="Away team scores" 
+                          value={57} 
+                          maxValue={100}
+                          className="h-2"
+                          color="primary"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Divider className="my-3" />
+                  
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span>Több mint 2.5 gól</span>
+                      <span className="font-medium">35%</span>
+                    </div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Kevesebb mint 2.5 gól</span>
+                      <span className="font-medium">65%</span>
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+              
+              <div className="flex gap-2">
+                <Button className="flex-1" variant="flat" radius="full" startContent={<span className="text-primary">•</span>}>
+                  Hazai
+                </Button>
+                <Button className="flex-1" variant="flat" radius="full" startContent={<span className="text-default-500">•</span>}>
+                  Döntetlen
+                </Button>
+                <Button className="flex-1" variant="flat" radius="full" startContent={<span className="text-primary">•</span>}>
+                  Vendég
+                </Button>
+              </div>
+            </div>
+          )}
+          
+          {isSimple && (
+            <div className="flex gap-2 mt-4">
+              <Button className="flex-1" color="primary" variant="flat">
+                Hazai
+              </Button>
+              <Button className="flex-1" variant="flat">
+                Döntetlen
+              </Button>
+              <Button className="flex-1" variant="flat">
+                Vendég
+              </Button>
+            </div>
+          )}
+        </div>
+      </CardBody>
+    </Card>
+  );
+};
+
+// Performance Card Component
+const PerformanceCard: React.FC = () => {
+  return (
+    <Card className="bg-content1 shadow-md">
+      <CardHeader className="pb-0 pt-4 px-4 flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Teljesítményed</h2>
+        <Tooltip content="Részletes statisztikák és elemzések">
+          <Button isIconOnly variant="light" size="sm">
+            <Icon icon="lucide:info" size={16} />
+          </Button>
+        </Tooltip>
+      </CardHeader>
+      
+      <CardBody>
+        <motion.div 
+          className="grid grid-cols-3 gap-4 mb-6"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Card className="bg-content2 shadow-none">
+            <CardBody className="p-3">
+              <div className="text-sm text-default-500 mb-1">Rang</div>
+              <div className="text-xl font-bold flex items-center gap-1">
+                8. <Icon icon="lucide:trending-up" size={14} className="text-success" />
+              </div>
+            </CardBody>
+          </Card>
+          
+          <Card className="bg-content2 shadow-none">
+            <CardBody className="p-3">
+              <div className="text-sm text-default-500 mb-1">Pontok</div>
+              <div className="text-xl font-bold">1,245</div>
+            </CardBody>
+          </Card>
+          
+          <Card className="bg-content2 shadow-none">
+            <CardBody className="p-3">
+              <div className="text-sm text-default-500 mb-1">Győzelem</div>
+              <div className="text-xl font-bold flex items-center gap-1">
+                68% <Chip size="sm" color="success" variant="flat" className="text-xs">+4%</Chip>
+              </div>
+            </CardBody>
+          </Card>
+        </motion.div>
+        
+        <div className="space-y-4 mb-6">
+          <motion.div 
+            className="flex items-center justify-between"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="flex items-center gap-2">
+              <div className="bg-success/20 p-2 rounded-full">
+                <Icon icon="lucide:trending-up" className="text-success" size={16} />
+              </div>
+              <div>
+                <div className="font-medium">Legmagasabb pontszám</div>
+                <div className="text-xs text-default-500">Elmúlt 3 hónap mérkőzései</div>
+              </div>
+            </div>
+            <Chip color="success" variant="flat" className="font-semibold">94%</Chip>
+          </motion.div>
+          
+          <motion.div 
+            className="flex items-center justify-between"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <div className="flex items-center gap-2">
+              <div className="bg-primary/20 p-2 rounded-full">
+                <Icon icon="lucide:calendar" className="text-primary" size={16} />
+              </div>
+              <div>
+                <div className="font-medium">Legmagasabb győzelmi sorozat</div>
+                <div className="text-xs text-default-500">Elmúlt hónap mérkőzései</div>
+              </div>
+            </div>
+            <Chip color="primary" variant="flat" className="font-semibold">12</Chip>
+          </motion.div>
+        </div>
+        
+        <div>
+          <div className="flex justify-between text-sm mb-2">
+            <span className="font-medium">Pontszám javulás (30 nap)</span>
+            <Tooltip content="Napi pontszám alakulása az elmúlt 30 napban">
+              <Button isIconOnly variant="light" size="sm" className="p-0 min-w-0 h-auto">
+                <Icon icon="lucide:info" size={14} />
+              </Button>
+            </Tooltip>
+          </div>
+          <motion.div 
+            className="flex gap-1 h-8"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {[30, 45, 35, 60, 50, 70, 75, 80, 85, 90].map((value, idx) => (
+              <Tooltip key={idx} content={`Nap ${idx + 1}: ${value}%`}>
+                <motion.div 
+                  className="h-full flex-1 rounded"
+                  style={{ 
+                    backgroundColor: value < 50 
+                      ? '#3b82f6' 
+                      : value < 70 
+                        ? '#10b981' 
+                        : '#059669',
+                  }}
+                  initial={{ height: "0%" }}
+                  animate={{ height: `${value}%` }}
+                  transition={{ duration: 0.5, delay: idx * 0.05 }}
+                />
+              </Tooltip>
+            ))}
+          </motion.div>
+        </div>
+      </CardBody>
+    </Card>
+  );
+};
+
+// Chart Card Component
+const ChartCard: React.FC = () => {
+  const [selected, setSelected] = React.useState("forecast");
+  
+  return (
+    <Card className="bg-content1 shadow-md">
+      <CardHeader className="pb-0 pt-4 px-4">
+        <Tabs 
+          selectedKey={selected} 
+          onSelectionChange={setSelected as any}
+          color="primary"
+          variant="light"
+          size="sm"
+        >
+          <Tab 
+            key="forecast" 
+            title={
+              <div className="flex items-center gap-2">
+                <Icon icon="lucide:bar-chart-2" size={16} />
+                <span>Előrejelzési pontosság</span>
+              </div>
+            }
+          />
+          <Tab 
+            key="tips" 
+            title={
+              <div className="flex items-center gap-2">
+                <Icon icon="lucide:clock" size={16} />
+                <span>Tipp előzetes</span>
+              </div>
+            }
+          />
+          <Tab 
+            key="performance" 
+            title={
+              <div className="flex items-center gap-2">
+                <Icon icon="lucide:trophy" size={16} />
+                <span>Teljesítmény</span>
+              </div>
+            }
+          />
+        </Tabs>
+      </CardHeader>
+      
+      <CardBody>
+        <div className="flex items-center mb-4">
+          <div className="flex-1 text-sm font-medium">Előrejelzési pontosság</div>
+          <div className="flex gap-4 text-sm">
+            <div className="flex items-center gap-1">
+              <span className="w-3 h-3 rounded-full bg-primary"></span>
+              <span>Pontosság</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="w-3 h-3 rounded-full bg-purple-500"></span>
+              <span>Átlag</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="h-64">
+          <div className="w-full h-full flex items-end justify-between gap-2 pt-6">
+            {chartData.map((item, index) => (
+              <div key={index} className="flex flex-col items-center flex-1">
+                <Tooltip content={`${item.month}: ${item.value}%`}>
+                  <motion.div 
+                    className="w-full bg-primary rounded-t-sm"
+                    initial={{ height: 0 }}
+                    animate={{ height: `${item.value}%` }}
+                    transition={{ duration: 0.5, delay: index * 0.05 }}
+                  ></motion.div>
+                </Tooltip>
+                <div className="text-xs text-default-500 mt-2">{item.month}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <div className="flex justify-end mt-4">
+          <Button 
+            size="sm" 
+            variant="flat" 
+            color="primary"
+            endContent={<Icon icon="lucide:download" size={14} />}
+          >
+            Exportálás
+          </Button>
+        </div>
+      </CardBody>
+    </Card>
+  );
+};
+
+// Main App Component
+const App: React.FC = () => {
+  return (
+    <div className="min-h-screen bg-background p-4 md:p-6">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6 text-foreground">Futball Elemző Dashboard</h1>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            <LeagueTable />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <StatsCard />
+              <MatchCard variant="simple" />
+            </div>
+            <ChartCard />
+          </div>
+          
+          <div className="space-y-6">
+            <MatchCard variant="detailed" />
+            <PerformanceCard />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
+----------------------------------------------
+
+import React from "react";
+import { Card, Button, Avatar } from "@heroui/react";
+import { Icon } from "@iconify/react";
+
+// Replace direct component imports with organized imports from component folders
+// import { TimeScaleSlider } from "./components/ui/time-scale-slider";
+// import { ServerCard } from "./components/cards/server-card";
+// import { TestimonialCard } from "./components/cards/testimonial-card";
+// import { FeatureCard } from "./components/cards/feature-card";
+// import { RatingScale } from "./components/ui/rating-scale";
+// import { SurveyCard } from "./components/survey/survey-card";
+// import { InsightCard } from "./components/cards/insight-card";
+// import { ColorStatusCard } from "./components/cards/color-status-card";
+
+// Import data from centralized data files
+import { testimonials } from "./data/testimonials";
+import { features } from "./data/features";
+import { surveys } from "./data/surveys";
+import { colorStatuses } from "./data/color-statuses";
+
+// TimeScaleSlider Component
+const TimeScaleSlider = () => {
+  return (
+    <Card className="bg-black border border-gray-800 rounded-xl p-4 relative">
+      <div className="flex justify-between items-center text-gray-300 text-sm">
+        <div className="flex flex-col items-center">
+          <span>12:50</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>12:55</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center relative">
+          <span>13:00</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+          <div className="absolute -top-8">
+            <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white text-xs px-3 py-1 rounded-full">
+              100+
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>13:05</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>13:10</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+      </div>
+      
+      {/* Active selection area */}
+      <div className="absolute top-1/2 left-[15%] right-[15%] transform -translate-y-1/2 h-12 rounded-full border border-blue-500 bg-gradient-to-r from-blue-900/30 to-blue-800/30"></div>
+      
+      {/* Pink dots */}
+      <div className="absolute top-1/2 left-[15%] transform -translate-y-1/2 w-2 h-2 rounded-full bg-pink-500"></div>
+      <div className="absolute top-1/2 left-[30%] transform -translate-y-1/2 w-2 h-2 rounded-full bg-pink-500"></div>
+      <div className="absolute top-1/2 left-[50%] transform -translate-y-1/2 w-2 h-2 rounded-full bg-pink-500"></div>
+      <div className="absolute top-1/2 left-[70%] transform -translate-y-1/2 w-2 h-2 rounded-full bg-pink-500"></div>
+    </Card>
+  );
+};
+
+// ServerItem Component
+interface ServerItemProps {
+  name: string;
+  speed: string;
+}
+
+const ServerItem = ({ name, speed }: ServerItemProps) => {
+  return (
+    <div className="flex items-center p-2 bg-gray-800/50 rounded-lg border border-gray-700">
+      <Button 
+        isIconOnly 
+        size="sm" 
+        className="bg-blue-600 text-white mr-3"
+        radius="full"
+      >
+        <Icon icon="lucide:plus" width={16} />
+      </Button>
+      
+      <div className="flex-grow">
+        <p className="text-white text-sm">{name}</p>
+        <p className="text-gray-400 text-xs">{speed}</p>
+      </div>
+      
+      <Icon icon="lucide:arrow-up-right" className="text-gray-400" width={16} />
+    </div>
+  );
+};
+
+// ServerCard Component
+const ServerCard = () => {
+  return (
+    <Card className="bg-black border border-gray-800 rounded-xl overflow-hidden">
+      {/* Header */}
+      <div className="bg-blue-600 p-3 flex items-center">
+        <h3 className="text-white font-medium">Radis-Master</h3>
+      </div>
+      
+      {/* Content */}
+      <div className="p-3 space-y-2">
+        <ServerItem name="US-east-1b" speed="150 kbps" />
+        <ServerItem name="US-east-1b" speed="150 kbps" />
+      </div>
+    </Card>
+  );
+};
+
+// TestimonialCard Component
+interface TestimonialCardProps {
+  name: string;
+  position: string;
+  accentColor: string;
+  quote: string;
+  highlightedText: string;
+  strategyCount: number;
+}
+
+const TestimonialCard = ({ 
+  name, 
+  position, 
+  accentColor, 
+  quote, 
+  highlightedText,
+  strategyCount
+}: TestimonialCardProps) => {
+  // Split the quote to highlight specific text
+  const quoteParts = quote.split(highlightedText);
+  
+  // Generate a unique avatar ID based on the name
+  const avatarId = name.replace(/\s+/g, '').toLowerCase();
+  
+  return (
+    <Card 
+      className="bg-black rounded-3xl overflow-hidden relative"
+      style={{
+        borderColor: accentColor,
+        borderWidth: "1px",
+        background: `radial-gradient(circle at bottom right, ${accentColor}33, transparent 70%)`
+      }}
+    >
+      {/* Top left corner accent */}
+      <div 
+        className="absolute top-0 left-0 w-24 h-24 rounded-br-[100px]"
+        style={{ backgroundColor: accentColor }}
+      >
+        <div className="absolute top-4 left-4">
+          <Icon icon="lucide:settings" className="text-black" width={20} />
+        </div>
+      </div>
+      
+      {/* Top indicator */}
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: accentColor }}></div>
+      </div>
+      
+      {/* Left indicator */}
+      <div className="absolute left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: accentColor }}></div>
+      </div>
+      
+      {/* Right indicator */}
+      <div className="absolute right-0 bottom-1/3 transform translate-x-1/2">
+        <div className="w-2 h-2 rounded-full bg-pink-500"></div>
+        <div className="h-px w-32 bg-gradient-to-r from-pink-500 to-transparent"></div>
+        <div className="text-gray-400 text-xs mt-1 ml-auto text-right">More option</div>
+      </div>
+      
+      {/* Strategy dropdown */}
+      <div className="pt-4 px-4 flex justify-end">
+        <Button 
+          className="bg-gray-900 text-white border-gray-800"
+          endContent={<Icon icon="lucide:chevron-down" width={16} />}
+        >
+          {strategyCount} strategy
+        </Button>
+      </div>
+      
+      {/* Content */}
+      <div className="p-6 pt-12">
+        <div className="flex items-start mb-8">
+          <Avatar 
+            src={`https://img.heroui.chat/image/avatar?w=80&h=80&u=${avatarId}`}
+            className="w-16 h-16 rounded-2xl border border-gray-800"
+          />
+          <div className="ml-4">
+            <h3 className="text-white text-xl font-medium">{name}</h3>
+            <p className="text-gray-400">{position}</p>
+          </div>
+        </div>
+        
+        <div className="text-xl">
+          <span className="text-gray-400">"</span>
+          <span className="text-gray-400">{quoteParts[0]}</span>
+          <span className="text-white font-medium">{highlightedText}</span>
+          <span className="text-gray-400">{quoteParts[1]}</span>
+        </div>
+      </div>
+    </Card>
+  );
+};
+
+// FeatureCard Component
+interface FeatureCardProps {
+  title: string;
+  description: string;
+  icon: string;
+  accentColor: string;
+  iconPosition?: "top" | "left";
+}
+
+const FeatureCard = ({ 
+  title, 
+  description, 
+  icon, 
+  accentColor,
+  iconPosition = "left" 
+}: FeatureCardProps) => {
+  return (
+    <Card 
+      className="bg-black/50 rounded-3xl overflow-hidden relative p-6"
+      style={{
+        borderColor: accentColor,
+        borderWidth: "1px",
+        background: `radial-gradient(circle at bottom right, ${accentColor}20, transparent 70%)`
+      }}
+    >
+      {/* Top indicator */}
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: accentColor }}></div>
+      </div>
+      
+      {/* Icon */}
+      {iconPosition === "top" ? (
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="bg-gray-900 p-3 rounded-xl border border-gray-800">
+            <Icon icon={icon} style={{ color: accentColor }} width={24} />
+          </div>
+        </div>
+      ) : (
+        <div className="absolute top-0 left-0 transform -translate-y-1/2">
+          <div className="bg-gray-900 p-3 rounded-xl border border-gray-800">
+            <Icon icon={icon} style={{ color: accentColor }} width={24} />
+          </div>
+        </div>
+      )}
+      
+      {/* Content */}
+      <div className={`${iconPosition === "top" ? "pt-8" : "pt-0"}`}>
+        <h2 className="text-white text-2xl font-medium mb-3">{title}</h2>
+        <p className="text-gray-400">{description}</p>
+      </div>
+    </Card>
+  );
+};
+
+// RatingScale Component
+const RatingScale = () => {
+  return (
+    <Card className="bg-black border border-gray-800 rounded-xl p-4 relative">
+      <div className="flex justify-between items-center text-gray-300 text-sm">
+        {/* Scale numbers */}
+        <div className="flex flex-col items-center">
+          <span>10</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>20</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>30</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>40</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>50</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>60</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>70</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>80</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+        
+        <div className="flex flex-col items-center">
+          <span>100</span>
+          <div className="h-4 w-px bg-gray-700 mt-1"></div>
+        </div>
+      </div>
+      
+      {/* Rating labels */}
+      <div className="absolute top-0 left-[10%] transform -translate-y-1/2">
+        <div className="bg-gray-900/80 text-white text-xs px-3 py-1 rounded-lg">
+          Poor
+        </div>
+      </div>
+      
+      <div className="absolute top-0 left-[30%] transform -translate-y-1/2">
+        <div className="bg-gray-900/80 text-white text-xs px-3 py-1 rounded-lg">
+          Ok
+        </div>
+      </div>
+      
+      {/* Active selection area */}
+      <div className="absolute top-1/2 left-[60%] right-[10%] transform -translate-y-1/2 h-12 rounded-full border border-blue-500 bg-gradient-to-r from-blue-900/30 to-blue-800/30">
+        <div className="absolute top-0 right-1/2 transform -translate-y-1/2">
+          <div className="bg-pink-500 text-white text-xs px-3 py-1 rounded-full">
+            Excellent
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+};
+
+// GaugeChart Component
+interface GaugeChartProps {
+  value: number;
+  color: string;
+  size?: "sm" | "md" | "lg";
+  thickness?: number;
+}
+
+const GaugeChart = ({ 
+  value, 
+  color, 
+  size = "md",
+  thickness = 6 
+}: GaugeChartProps) => {
+  // Calculate the size based on the prop
+  const sizeMap = {
+    sm: 120,
+    md: 180,
+    lg: 240
+  };
+  
+  const diameter = sizeMap[size];
+  const radius = diameter / 2;
+  const circumference = 2 * Math.PI * radius;
+  const semi = circumference / 2;
+  const strokeDashoffset = semi - (semi * value) / 100;
+  
+  return (
+    <div className="relative flex items-center justify-center">
+      <svg
+        width={diameter}
+        height={diameter / 2}
+        viewBox={`0 0 ${diameter} ${diameter / 2}`}
+        className="transform rotate-180"
+      >
+        {/* Background arc */}
+        <path
+          d={`M ${thickness / 2}, ${diameter / 2} a ${radius - thickness / 2}, ${
+            radius - thickness / 2
+          } 0 1, 1 ${diameter - thickness}, 0`}
+          fill="none"
+          stroke="#333"
+          strokeWidth={thickness}
+          strokeLinecap="round"
+        />
+        
+        {/* Foreground arc */}
+        <path
+          d={`M ${thickness / 2}, ${diameter / 2} a ${radius - thickness / 2}, ${
+            radius - thickness / 2
+          } 0 1, 1 ${diameter - thickness}, 0`}
+          fill="none"
+          stroke={color}
+          strokeWidth={thickness}
+          strokeLinecap="round"
+          strokeDasharray={semi}
+          strokeDashoffset={strokeDashoffset}
+        />
+        
+        {/* Indicator dot */}
+        <circle
+          cx={diameter / 2 + (radius - thickness) * Math.cos(Math.PI * (1 - value / 100))}
+          cy={diameter / 2 + (radius - thickness) * Math.sin(Math.PI * (1 - value / 100))}
+          r={thickness / 1.5}
+          fill="#fff"
+        />
+      </svg>
+      
+      {/* Value display */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 translate-y-1/4 text-center">
+        <p className="text-4xl font-bold text-white">{value}%</p>
+      </div>
+    </div>
+  );
+};
+
+// SurveyOption Interface
+interface SurveyOption {
+  label: string;
+  value: number;
+  color: string;
+}
+
+// SurveyCard Component
+interface SurveyCardProps {
+  team: string;
+  question: string;
+  options: SurveyOption[];
+  gaugeLabel: string;
+  gaugeValue: number;
+  gaugeColor: string;
+  rightContent?: string;
+}
+
+const SurveyCard = ({
+  team,
+  question,
+  options,
+  gaugeLabel,
+  gaugeValue,
+  gaugeColor,
+  rightContent
+}: SurveyCardProps) => {
+  return (
+    <Card
+      className="bg-black rounded-3xl overflow-hidden relative p-6"
+      style={{
+        borderColor: gaugeColor,
+        borderWidth: "1px",
+        background: `radial-gradient(circle at bottom right, ${gaugeColor}20, transparent 70%)`
+      }}
+    >
+      {/* Top indicator */}
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: gaugeColor }}></div>
+      </div>
+      
+      {/* Right content if provided */}
+      {rightContent && (
+        <div className="absolute right-0 top-1/3 transform translate-x-1/2">
+          <div className="h-px w-32 bg-gradient-to-r from-pink-500 to-transparent"></div>
+          <div className="text-gray-400 text-xs mt-1 ml-auto text-right">{rightContent}</div>
+        </div>
+      )}
+      
+      {/* Team selector */}
+      <div className="mb-4">
+        <Button
+          className="bg-gray-900 text-white border-gray-800"
+          endContent={<Icon icon="lucide:chevron-down" width={16} />}
+        >
+          {team}
+        </Button>
+      </div>
+      
+      {/* Question */}
+      <div className="mb-6">
+        <h2 className="text-white text-2xl font-light leading-tight">{question}</h2>
+      </div>
+      
+      {/* Options */}
+      <div className="mb-6 space-y-2">
+        {options.map((option, index) => (
+          <div key={index} className="flex items-center">
+            <div className="w-3 h-3 mr-2" style={{ backgroundColor: option.color }}></div>
+            <span className="text-white mr-2">{option.label}</span>
+            <span className="text-white">{option.value}</span>
+          </div>
+        ))}
+      </div>
+      
+      {/* Gauge chart */}
+      <div className="flex flex-col items-center">
+        <GaugeChart value={gaugeValue} color={gaugeColor} />
+        <div className="text-gray-400 text-lg -mt-4">{gaugeLabel}</div>
+      </div>
+      
+      {/* Bottom indicator */}
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: gaugeColor }}></div>
+      </div>
+    </Card>
+  );
+};
+
+// InsightCard Component
+interface InsightCardProps {
+  title: string;
+  question: string;
+}
+
+const InsightCard = ({ title, question }: InsightCardProps) => {
+  return (
+    <Card
+      className="bg-black rounded-3xl overflow-hidden relative p-6"
+      style={{
+        borderColor: "#333",
+        borderWidth: "1px"
+      }}
+    >
+      {/* Bottom indicator */}
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
+        <div className="w-2 h-2 rounded-full bg-green-500"></div>
+      </div>
+      
+      {/* Title selector */}
+      <div className="mb-6">
+        <Button
+          className="bg-gray-900 text-white border-gray-800"
+          endContent={<Icon icon="lucide:chevron-down" width={16} />}
+        >
+          {title}
+        </Button>
+      </div>
+      
+      {/* Question */}
+      <div className="mb-4">
+        <h2 className="text-white text-2xl font-light leading-tight">{question}</h2>
+      </div>
+    </Card>
+  );
+};
+
+// ColorStatusCard Component
+interface ColorStatusCardProps {
+  color: string;
+  hexCode: string;
+  rgbValues: number[];
+  icon: string;
+  accentColor: string;
+  iconShape?: "circle" | "triangle";
+}
+
+const ColorStatusCard = ({
+  color,
+  hexCode,
+  rgbValues,
+  icon,
+  accentColor,
+  iconShape = "circle"
+}: ColorStatusCardProps) => {
+  // Format RGB string
+  const rgbString = rgbValues.join(" ");
+  
+  return (
+    <div className="relative">
+      {/* Color label */}
+      <div className="absolute top-1/2 left-0 transform -translate-x-full -translate-y-1/2 flex items-center">
+        <div className="w-2 h-2 rounded-full mr-2" style={{ backgroundColor: accentColor }}></div>
+        <span className="text-white">{color}</span>
+      </div>
+      
+      <Card
+        className="bg-black rounded-3xl overflow-hidden relative p-6 flex items-center justify-center"
+        style={{
+          borderColor: accentColor,
+          borderWidth: "1px",
+          background: `radial-gradient(circle at center, ${accentColor}40, transparent 70%)`,
+          aspectRatio: "1/1"
+        }}
+      >
+        {/* Icon */}
+        {iconShape === "triangle" ? (
+          <div className="text-center">
+            <div className="bg-pink-500 p-3 rounded-lg inline-block">
+              <Icon icon={icon} className="text-white" width={24} />
+            </div>
+          </div>
+        ) : (
+          <div className="text-center">
+            <div 
+              className="p-3 rounded-lg inline-block"
+              style={{ 
+                backgroundColor: accentColor,
+                clipPath: "polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%)"
+              }}
+            >
+              <Icon icon={icon} className="text-black" width={24} />
+            </div>
+          </div>
+        )}
+      </Card>
+      
+      {/* Color details */}
+      <div className="mt-2 text-gray-400">
+        <div>HEX: {hexCode}</div>
+        <div>RGB: {rgbString}</div>
+      </div>
+    </div>
+  );
+};
+
+// Main App Component
+export default function App() {
+  return (
+    <div className="min-h-screen bg-black p-8 flex flex-col gap-12 items-center justify-center">
+      <div className="w-full max-w-md">
+        <h3 className="text-blue-500 font-medium mb-2 flex items-center">
+          <span className="inline-block w-2 h-2 rounded-full bg-blue-500 mr-2"></span>
+          The time scale
+        </h3>
+        <TimeScaleSlider />
+      </div>
+      
+      <div className="w-full max-w-md">
+        <h3 className="text-blue-500 font-medium mb-2 flex items-center">
+          <span className="inline-block w-2 h-2 rounded-full bg-blue-500 mr-2"></span>
+          UI Element
+        </h3>
+        <ServerCard />
+      </div>
+      
+      <div className="w-full max-w-md grid grid-cols-1 gap-8">
+        {testimonials.map((testimonial, index) => (
+          <TestimonialCard 
+            key={index}
+            {...testimonial}
+          />
+        ))}
+        
+        {features.map((feature, index) => (
+          <FeatureCard 
+            key={index}
+            {...feature}
+          />
+        ))}
+      </div>
+      
+      <div className="w-full max-w-4xl">
+        <RatingScale />
+      </div>
+      
+      <div className="w-full max-w-md grid grid-cols-1 md:grid-cols-2 gap-8">
+        {surveys.map((survey, index) => (
+          <SurveyCard 
+            key={index}
+            {...survey}
+          />
+        ))}
+      </div>
+      
+      <div className="w-full max-w-md">
+        <InsightCard 
+          title="Insight"
+          question="What challenges do you face when creating videos from images using current video creation tools?"
+        />
+      </div>
+      
+      <div className="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {colorStatuses.map((status, index) => (
+          <ColorStatusCard 
+            key={index}
+            {...status}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+-----------------------------------------
